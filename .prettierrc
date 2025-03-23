@@ -1,0 +1,8 @@
+{
+  "singleAttributePerLine": true,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrderSeparation": true
+}
