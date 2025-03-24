@@ -25,18 +25,18 @@
     ],
     "@typescript-eslint/no-explicit-any": "off",
     "comma-dangle": "off",
-    "import-helpers/order-imports": ["error", {
-      "alphabetize": {
-        "ignoreCase": true,
-        "order": "asc"
-      },
-      "groups": [
-        "/^react/",
-        "module",
-        ["parent", "sibling", "index"]
-      ],
-      "newlinesBetween": "always"
-    }],
+    // "import-helpers/order-imports": ["warn", {
+    //   "alphabetize": {
+    //     "ignoreCase": true,
+    //     "order": "asc"
+    //   },
+    //   "groups": [
+    //     "/^react/",
+    //     "module",
+    //     ["parent", "sibling", "index"]
+    //   ],
+    //   "newlinesBetween": "always"
+    // }],
     "no-multiple-empty-lines": ["error", {
       "max": 1
     }],
@@ -54,6 +54,7 @@
     }],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
     "sort-imports": ["error", {
       "ignoreCase": true,
       "ignoreDeclarationSort": true

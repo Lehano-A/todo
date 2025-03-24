@@ -1,8 +1,19 @@
 {
   "singleAttributePerLine": true,
   "singleQuote": true,
+  "semi": false,
+  "tabWidth": 2,
+  "printWidth": 120,
+  "endOfLine": "auto",
   "jsxSingleQuote": true,
-  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrder": [
+    "^@core/(.*)$",
+    "^@ui/(.*)$",
+    "^[./]"
+  ],
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrderSeparation": true
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "parser": "typescript",
+  "arrowParens": "always"
 }
