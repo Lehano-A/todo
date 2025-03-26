@@ -12,6 +12,7 @@
     "^[./]"
   ],
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "attributeSort": "alphabetical",
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "parser": "typescript",
