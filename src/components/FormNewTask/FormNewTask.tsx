@@ -20,7 +20,6 @@ const StyledCloseIcon = styled('svg')`
   background: url(${CloseIcon}) no-repeat center center;
   width: 100%;
   height: 100%;
-  // filter: brightness(0) saturate(100%);
 `
 
 const ButtonClose = styled('button')`
@@ -69,31 +68,50 @@ const Deadline = styled('input')`
   }
 `
 
+const ButtonCreateTask = styled('button')`
+  text-transform: uppercase;
+  color: white;
+  background-image: ${({ theme }) => theme.palette.gradients.main};
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  font-family: Rubik-Regular, Roboto, Arial, sans-serif;
+`
+
 const FormNewTask = forwardRef(function (props, ref: any) {
   const InputWithFakeFocus = withFakeFocus(Input)
   const TextAreaWithFakeFocus = withFakeFocus(TextArea)
   const DeadlineWithFakeFocus = withFakeFocus(Deadline)
   const ButtonCloseWithFakeFocus = withFakeFocus(ButtonClose)
 
-  function handleClose() {
+  function handleCloseDialog() {
     if (ref.current) {
       ref.current.close()
     }
+  }
+
+  function handleCreateNewTask(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    handleCloseDialog()
   }
 
   return (
     <StyledDialog ref={ref}>
       <ButtonCloseWithFakeFocus
         $wrapperStyle={styleButtonCloseForFakeFocus}
-        onClick={handleClose}
+        onClick={handleCloseDialog}
       >
         <StyledCloseIcon />
       </ButtonCloseWithFakeFocus>
 
-      <form>
+      <form onSubmit={handleCreateNewTask}>
         <Label>
           Название задачи
-          <InputWithFakeFocus placeholder='Испечь пирожки...' />
+          <InputWithFakeFocus
+            placeholder='Испечь пирожки...'
+            required
+          />
         </Label>
 
         <Label>
@@ -108,6 +126,8 @@ const FormNewTask = forwardRef(function (props, ref: any) {
           Крайний срок выполнения
           <DeadlineWithFakeFocus type='date' />
         </Label>
+
+        <ButtonCreateTask>Создать</ButtonCreateTask>
       </form>
     </StyledDialog>
   )
