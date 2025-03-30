@@ -1,7 +1,6 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import withFakeFocus from '../../HOC/withFakeFocus'
 import CloseIcon from '../../images/icons/close.svg'
 
 const StyledDialog = styled('dialog')`
@@ -27,23 +26,19 @@ const ButtonClose = styled('button')`
   height: 100%;
   border-radius: 50%;
 
-  &:focus {
-    background-color: white;
-  }
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 30px;
+  height: 30px;
+  borderradius: 50%;
 
-  &:focus-visible {
+  &:focus {
+    ${({ theme }) => theme.focus.input}
+    border-radius: 50%;
     outline: none;
   }
 `
-
-const styleButtonCloseForFakeFocus: React.CSSProperties = {
-  position: 'absolute',
-  right: '5px',
-  top: '5px',
-  width: '30px',
-  height: '30px',
-  borderRadius: '50%',
-}
 
 const Label = styled('label')`
   display: flex;
@@ -53,41 +48,57 @@ const Label = styled('label')`
   }
 `
 
-const Input = styled('input')``
+const NameTask = styled('input')`
+  &:focus {
+    ${({ theme }) => theme.focus.input};
+  }
+`
 
-const TextArea = styled('textarea')`
+const Description = styled('textarea')`
   min-width: 400px;
   max-width: 1000px;
   min-height: 40px;
   margin-bottom: -4px;
-`
 
-const Deadline = styled('input')`
-  &::placeholder {
-    color: lime;
+  &:focus {
+    ${({ theme }) => theme.focus.input};
   }
 `
 
-const ButtonCreateTask = styled('button')`
+const Deadline = styled('input')`
+  &:focus {
+    ${({ theme }) => theme.focus.input};
+  }
+`
+
+const ButtonSubmit = styled('button')`
   text-transform: uppercase;
   color: white;
-  background-image: ${({ theme }) => theme.palette.gradients.main};
+  background: ${({ theme }) => theme.palette.gradients.main};
   border-radius: 10px;
   padding: 10px;
   width: 100%;
   font-family: Rubik-Regular, Roboto, Arial, sans-serif;
+
+  &:disabled {
+    background: ${({ theme }) => theme.palette.grey[300]};
+    cursor: default;
+  }
 `
 
 const FormNewTask = forwardRef(function (props, ref: any) {
-  const InputWithFakeFocus = withFakeFocus(Input)
-  const TextAreaWithFakeFocus = withFakeFocus(TextArea)
-  const DeadlineWithFakeFocus = withFakeFocus(Deadline)
-  const ButtonCloseWithFakeFocus = withFakeFocus(ButtonClose)
+  const [inputsValues, setInputsValues] = useState({ nameTask: '', description: '', deadline: '' })
 
   function handleCloseDialog() {
     if (ref.current) {
       ref.current.close()
     }
+  }
+
+  function handleInputValue(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
+    const { name, value } = e.target
+
+    setInputsValues((prevState) => ({ ...prevState, [name]: value }))
   }
 
   function handleCreateNewTask(e: React.FormEvent<HTMLFormElement>) {
@@ -98,36 +109,51 @@ const FormNewTask = forwardRef(function (props, ref: any) {
 
   return (
     <StyledDialog ref={ref}>
-      <ButtonCloseWithFakeFocus
-        $wrapperStyle={styleButtonCloseForFakeFocus}
+      <span
+        autoFocus
+        tabIndex={-1}
+      ></span>
+      {/* "утка" для фокуса при открытии dialog */}
+
+      <ButtonClose
         onClick={handleCloseDialog}
+        tabIndex={0}
       >
         <StyledCloseIcon />
-      </ButtonCloseWithFakeFocus>
+      </ButtonClose>
 
       <form onSubmit={handleCreateNewTask}>
         <Label>
           Название задачи
-          <InputWithFakeFocus
+          <NameTask
+            name='nameTask'
+            onChange={handleInputValue}
             placeholder='Испечь пирожки...'
             required
+            value={inputsValues.nameTask}
           />
         </Label>
 
         <Label>
           Описание
-          <TextAreaWithFakeFocus
+          <Description
+            name='description'
+            onChange={handleInputValue}
             placeholder='3 стакана муки, 1 стакан молока, дрожжи, кубик сливочного масла...'
             rows={9}
+            value={inputsValues.description}
           />
         </Label>
 
         <Label>
           Крайний срок выполнения
-          <DeadlineWithFakeFocus type='date' />
+          <Deadline
+            name='deadline'
+            type='date'
+          />
         </Label>
 
-        <ButtonCreateTask>Создать</ButtonCreateTask>
+        <ButtonSubmit disabled={!inputsValues.nameTask}>Создать</ButtonSubmit>
       </form>
     </StyledDialog>
   )
