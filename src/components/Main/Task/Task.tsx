@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
 const StyledTask = styled('div')`
@@ -8,9 +8,11 @@ const StyledTask = styled('div')`
   border-radius: 12px;
 `
 
-const Title = styled('h2')``
+const Title = styled('h2')`
+  font-size: 1rem;
+`
 
-function Task({ children }) {
+function Task({ children }: PropsWithChildren) {
   return (
     <StyledTask>
       <Title>{children}</Title>

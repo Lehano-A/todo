@@ -1,7 +1,8 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { forwardRef, useState } from 'react'
 import styled from 'styled-components'
 
 import CloseIcon from '../../images/icons/close.svg'
+import ls from '../../utils/localStorage'
 
 const StyledDialog = styled('dialog')`
   position: relative;
@@ -104,9 +105,14 @@ const FormNewTask = forwardRef(function (props, ref: any) {
   function handleCreateNewTask(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
+    addNewTaskInLS()
     handleCloseDialog()
   }
 
+  // добавить новую задачу в ЛХ
+  function addNewTaskInLS() {
+    ls.add('tasks', inputsValues)
+  }
   return (
     <StyledDialog ref={ref}>
       <span
