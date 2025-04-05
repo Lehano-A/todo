@@ -1,6 +1,6 @@
 const ls = {
   get: function (key: string) {
-    return localStorage.getItem(key)
+    return parsingDataFromLS<string>(key)
   },
 
   add: function (key: string, value: any) {
@@ -21,7 +21,7 @@ const ls = {
 
     // если данные внутри ЛХ это - массив
     if (Array.isArray(parsedData)) {
-      const filtered = parsedData.filter((item) => item !== value)
+      const filtered = parsedData.filter((item) => item.id !== value)
       localStorage.setItem(key, JSON.stringify(filtered))
     }
   },
