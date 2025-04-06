@@ -1,7 +1,10 @@
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
+import { TODO_TASKS } from '../../../constants'
 import { ReactComponent as IconDelete } from '../../../images/icons/delete.svg'
+import useActionsWithTasks from '../../hooks/useActionsWithTasks'
+import { TaskType } from './task.type'
 
 const StyledTask = styled('div')`
   position: relative;
@@ -33,15 +36,29 @@ const ButtonDelete = styled('button')`
   height: 20px;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 `
 
-function Task({ children }: PropsWithChildren) {
+interface TaskProps {
+  data: TaskType
+}
+
+function Task({ data }: TaskProps) {
+  const { id } = data
+  const { removeTask } = useActionsWithTasks()
+
+  function handleRemoveTask() {
+    removeTask(TODO_TASKS, id)
+  }
+
   return (
     <StyledTask>
-      <Title>{children}</Title>
+      <Title>{data.nameTask}</Title>
 
-      <ButtonDelete id='buttonDeleteTask'>
+      <ButtonDelete
+        id='buttonDeleteTask'
+        onClick={handleRemoveTask}
+      >
         <StyledIconDelete />
       </ButtonDelete>
     </StyledTask>
