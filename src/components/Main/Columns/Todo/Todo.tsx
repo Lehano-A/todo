@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import AddIcon from '../../../../images/icons/add.svg'
 import { activateForm } from '../../../../redux/reducers/slices/formAddTaskSlice'
+import { getToDoTasksFromLS } from '../../../../redux/reducers/slices/todoTasksSlice'
+import { RootState } from '../../../../redux/store'
 import Column from '../../../../styled/column'
-import ls from '../../../../utils/localStorage'
 import Task from '../../Task/Task'
-import { TaskType } from '../../Task/task.type'
 
 const StyledTodo = styled(Column)`
   background-color: #8080800f;
@@ -24,26 +24,29 @@ const StyledAddIcon = styled('svg')`
 `
 
 const ButtonAddTask = styled('button')`
+  position: absolute;
+  top: 15px;
   width: 40px;
   height: 40px;
   background-size: 40px 40px;
   background-color: white;
   border-radius: 50%;
+`
+
+const TextNoTasks = styled('p')`
   position: absolute;
-  bottom: 25px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `
 
 function Todo({ refFormAddTask }: any) {
   const dispatch = useDispatch()
 
-  const [tasksFromLS, setTasksFromLS] = useState<TaskType[]>([])
+  const todoTasks = useSelector((state: RootState) => state.todoTasks.tasks)
 
   useEffect(() => {
-    const data = ls.get('tasks')
-
-    if (Array.isArray(data)) {
-      setTasksFromLS(data)
-    }
+    dispatch(getToDoTasksFromLS())
   }, [])
 
   // показать форму добавления новой задачи
@@ -57,13 +60,20 @@ function Todo({ refFormAddTask }: any) {
 
   return (
     <StyledTodo>
-      {tasksFromLS.map((task, id) => (
-        <Task key={id + task.nameTask}>{task.nameTask}</Task>
-      ))}
-
       <ButtonAddTask onClick={showFormAddNewTask}>
         <StyledAddIcon></StyledAddIcon>
       </ButtonAddTask>
+
+      {todoTasks.length > 0 ? (
+        todoTasks.map((task) => (
+          <Task
+            data={task}
+            key={task.id}
+          />
+        ))
+      ) : (
+        <TextNoTasks>Пока нет задач</TextNoTasks>
+      )}
     </StyledTodo>
   )
 }
