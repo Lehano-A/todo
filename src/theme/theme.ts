@@ -26,7 +26,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: Rubik-Light, Roboto, Arial, sans-serif;
+    font-family: Rubik-Light, Roboto, Arial,
+     sans-serif;
+     font-size: 1rem;
+     color: ${palette.grey[900]}
   }
 
   button {
@@ -56,6 +59,9 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
   }
 
+  h2 {
+    margin: 0;
+  }
 `
 
 const theme = {
