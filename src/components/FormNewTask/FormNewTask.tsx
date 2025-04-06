@@ -1,8 +1,11 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import uniqid from 'uniqid'
 
-import CloseIcon from '../../images/icons/close.svg'
-import ls from '../../utils/localStorage'
+import { TODO_TASKS } from '../../constants'
+import { ReactComponent as IconClose } from '../../images/icons/close.svg'
+import { TaskType } from '../Main/Task/task.type'
+import useActionsWithTasks from '../hooks/useActionsWithTasks'
 
 const StyledDialog = styled('dialog')`
   position: relative;
@@ -16,28 +19,24 @@ const StyledDialog = styled('dialog')`
   }
 `
 
-const StyledCloseIcon = styled('svg')`
-  background: url(${CloseIcon}) no-repeat center center;
-  width: 100%;
-  height: 100%;
+const StyledIconClose = styled(IconClose)`
+  fill: ${({ theme }) => theme.palette.primary.main};
 `
 
 const ButtonClose = styled('button')`
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   right: 5px;
   top: 5px;
   width: 30px;
   height: 30px;
-  borderradius: 50%;
+  border-radius: 50%;
 
   &:focus {
     ${({ theme }) => theme.focus.input}
     border-radius: 50%;
-    outline: none;
   }
 `
 
@@ -87,21 +86,40 @@ const ButtonSubmit = styled('button')`
   }
 `
 
-const FormNewTask = forwardRef(function (props, ref: any) {
-  const [inputsValues, setInputsValues] = useState({ nameTask: '', description: '', deadline: '' })
+const defaultValues = { id: '', nameTask: '', description: '', deadline: '' }
 
+const FormNewTask = forwardRef(function (props, ref: any) {
+  const [inputsValues, setInputsValues] = useState<TaskType>(defaultValues)
+  const [isPressedButtonCreateTask, setIsPressedButtonCreateTask] = useState(false)
+
+  const { addNewTask } = useActionsWithTasks()
+
+  useEffect(() => {
+    if (isPressedButtonCreateTask) {
+      addNewTask(TODO_TASKS, inputsValues)
+    }
+
+    return () => {
+      setIsPressedButtonCreateTask(false)
+      setInputsValues(defaultValues)
+    }
+  }, [isPressedButtonCreateTask])
+
+  // обработать закрытие диалогового окна
   function handleCloseDialog() {
     if (ref.current) {
       ref.current.close()
     }
   }
 
+  // обработать входящее значение инпута
   function handleInputValue(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
     const { name, value } = e.target
 
     setInputsValues((prevState) => ({ ...prevState, [name]: value }))
   }
 
+  // обработать создание новой задачи
   function handleCreateNewTask(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
@@ -111,8 +129,10 @@ const FormNewTask = forwardRef(function (props, ref: any) {
 
   // добавить новую задачу в ЛХ
   function addNewTaskInLS() {
-    ls.add('tasks', inputsValues)
+    setIsPressedButtonCreateTask(true)
+    setInputsValues((prevState) => ({ ...prevState, id: uniqid() }))
   }
+
   return (
     <StyledDialog ref={ref}>
       <span
@@ -125,7 +145,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
         onClick={handleCloseDialog}
         tabIndex={0}
       >
-        <StyledCloseIcon />
+        <StyledIconClose />
       </ButtonClose>
 
       <form onSubmit={handleCreateNewTask}>
