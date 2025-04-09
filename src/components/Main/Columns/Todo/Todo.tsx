@@ -14,7 +14,7 @@ const StyledTodo = styled(Column)`
   position: relative;
 
   :where(& > div):not(:last-of-type) {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 `
 const StyledAddIcon = styled('svg')`

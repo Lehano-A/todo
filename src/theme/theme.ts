@@ -59,7 +59,7 @@ const GlobalStyle = createGlobalStyle`
     outline: none;
   }
 
-  h2 {
+  h2, p {
     margin: 0;
   }
 `
