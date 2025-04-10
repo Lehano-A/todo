@@ -15,6 +15,5 @@
   "attributeSort": "alphabetical",
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "parser": "typescript",
   "arrowParens": "always"
 }
