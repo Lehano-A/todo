@@ -1,5 +1,4 @@
-import React, { forwardRef, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 
 import FormNewTask from '../FormNewTask/FormNewTask'
@@ -13,14 +12,8 @@ const StyledMain = styled('main')`
   width: 100%;
 `
 
-interface FormAddTask {
-  formAddTask: { isActive: boolean }
-}
-
 function Main() {
   const refFormAddTask = useRef(null)
-
-  const isActiveFormNewTask = useSelector((state: FormAddTask) => state.formAddTask.isActive)
 
   return (
     <StyledMain>
@@ -28,7 +21,7 @@ function Main() {
       <InProcess />
       <Done />
 
-      {<FormNewTask ref={refFormAddTask} />}
+      <FormNewTask ref={refFormAddTask} />
     </StyledMain>
   )
 }

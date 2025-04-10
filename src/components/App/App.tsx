@@ -11,11 +11,6 @@ const StyledApp = styled('div')`
 `
 
 function App() {
-  const list = [
-    { title: 'Починить дверь', id: 0 },
-    { title: 'Проверить счётчики воды', id: 2 },
-  ]
-
   return (
     <StyledApp>
       <Header />

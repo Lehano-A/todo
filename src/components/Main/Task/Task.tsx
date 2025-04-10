@@ -1,5 +1,5 @@
 import React, { TransitionEvent, useEffect, useRef, useState } from 'react'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { TODO_TASKS } from '../../../constants'
 import { ReactComponent as IconArrowDown } from '../../../images/icons/arrow-down.svg'
