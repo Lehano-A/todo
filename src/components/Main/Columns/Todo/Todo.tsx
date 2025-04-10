@@ -2,35 +2,50 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import AddIcon from '../../../../images/icons/add.svg'
+import { ReactComponent as AddIcon } from '../../../../images/icons/add.svg'
 import { activateForm } from '../../../../redux/reducers/slices/formAddTaskSlice'
 import { getToDoTasksFromLS } from '../../../../redux/reducers/slices/todoTasksSlice'
 import { RootState } from '../../../../redux/store'
 import Column from '../../../../styled/column'
 import Task from '../../Task/Task'
 
+const Box = styled('div')`
+  position: relative;
+  display: flex;
+  background-color: transparent;
+`
+
 const StyledTodo = styled(Column)`
-  background-color: #8080800f;
+  background-color: ${({ theme }) => theme.palette.grey[100]};
   position: relative;
 
   :where(& > div):not(:last-of-type) {
     margin-bottom: 15px;
   }
 `
-const StyledAddIcon = styled('svg')`
-  background: url(${AddIcon}) no-repeat center center;
+const StyledAddIcon = styled(AddIcon)`
   width: 100%;
   height: 100%;
 `
 
 const ButtonAddTask = styled('button')`
-  position: absolute;
-  top: 15px;
+  position: sticky;
+  top: 50px;
   width: 40px;
   height: 40px;
   background-size: 40px 40px;
   background-color: white;
   border-radius: 50%;
+  margin: 90px 10px 0 0;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.primary.main};
+
+    & svg {
+      fill: white;
+    }
+  }
 `
 
 const TextNoTasks = styled('p')`
@@ -59,22 +74,24 @@ function Todo({ refFormAddTask }: any) {
   }
 
   return (
-    <StyledTodo>
+    <Box>
       <ButtonAddTask onClick={showFormAddNewTask}>
         <StyledAddIcon></StyledAddIcon>
       </ButtonAddTask>
 
-      {todoTasks.length > 0 ? (
-        todoTasks.map((task) => (
-          <Task
-            data={task}
-            key={task.id}
-          />
-        ))
-      ) : (
-        <TextNoTasks>Пока нет задач</TextNoTasks>
-      )}
-    </StyledTodo>
+      <StyledTodo>
+        {todoTasks.length > 0 ? (
+          todoTasks.map((task) => (
+            <Task
+              data={task}
+              key={task.id}
+            />
+          ))
+        ) : (
+          <TextNoTasks>Пока нет задач</TextNoTasks>
+        )}
+      </StyledTodo>
+    </Box>
   )
 }
 
