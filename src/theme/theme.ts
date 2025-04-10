@@ -5,6 +5,7 @@ const palette = {
   primary: { main: '#5433ff' },
   secondary: { main: '' },
   accent: { main: '' },
+  error: { main: '#ffadb7' },
   bg: { main: '' },
   gradients: {
     main: 'linear-gradient(to right, #5433ff, #20bdff, #a5fecb)',
@@ -26,8 +27,9 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: Rubik-Light, Roboto, Arial,
+    font-family: Rubik,  Roboto, Arial,
      sans-serif;
+     font-weight: 400;
      font-size: 1rem;
      color: ${palette.grey[900]}
   }

@@ -6,6 +6,7 @@ import { ReactComponent as IconArrowDown } from '../../../images/icons/arrow-dow
 import { ReactComponent as IconDelete } from '../../../images/icons/delete.svg'
 import increment from '../../../utils/increment'
 import useActionsWithTasks from '../../hooks/useActionsWithTasks'
+import DialogRemoveTask from './DialogRemoveTask/DialogRemoveTask'
 import { translateBackward, translateForward } from './animation/translate'
 import { StyledTaskProps } from './styledTask.type'
 import { TaskType } from './task.type'
@@ -40,6 +41,7 @@ const StyledIconArrowDown = styled(IconArrowDown)`
 
 const Title = styled('h2')`
   font-size: 1rem;
+  font-weight: 600;
 `
 
 const ButtonDelete = styled('button')`
@@ -83,6 +85,7 @@ function Task({ data }: TaskProps) {
 
   const refTask = useRef<HTMLDivElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
+  const refDialog = useRef<HTMLDialogElement>(null)
 
   const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
@@ -108,10 +111,19 @@ function Task({ data }: TaskProps) {
     }
   }, [])
 
+  // показать диалоговое окно удаления задачи
+  function showDialogRemoveTask() {
+    if (refDialog.current) {
+      refDialog.current.showModal()
+    }
+  }
+
+  // удалить задачу
   function handleRemoveTask() {
     removeTask(TODO_TASKS, id)
   }
 
+  // показать описание задачи
   function handleShowDescription() {
     setWasClickedButtonDescription((prevState) => !prevState)
     setIsDisabledButtonShowDescription(true)
@@ -121,6 +133,7 @@ function Task({ data }: TaskProps) {
     }
   }
 
+  // обработчик окончания перехода (завершения открытия/закрытия описания задачи)
   function handleTransitionEnd(e: TransitionEvent) {
     if (e.propertyName === 'height') {
       if (!wasClickedButtonDescription) {
@@ -142,10 +155,16 @@ function Task({ data }: TaskProps) {
 
       <ButtonDelete
         id='buttonDeleteTask'
-        onClick={handleRemoveTask}
+        onClick={showDialogRemoveTask}
       >
         <StyledIconDelete />
       </ButtonDelete>
+
+      <DialogRemoveTask
+        data={data}
+        handleRemoveTask={handleRemoveTask}
+        refDialog={refDialog}
+      />
 
       {data.description && (
         <ButtonShowDescription

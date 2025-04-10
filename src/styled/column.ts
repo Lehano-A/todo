@@ -6,7 +6,7 @@ const Column = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 70px 30px 40px;
+  padding: 70px 30px 150px;
 `
 
 export default Column

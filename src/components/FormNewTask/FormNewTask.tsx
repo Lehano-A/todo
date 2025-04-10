@@ -3,44 +3,12 @@ import styled from 'styled-components'
 import uniqid from 'uniqid'
 
 import { TODO_TASKS } from '../../constants'
-import { ReactComponent as IconClose } from '../../images/icons/close.svg'
 import { TaskType } from '../Main/Task/task.type'
+import Dialog from '../common/Dialog/Dialog'
 import useActionsWithTasks from '../hooks/useActionsWithTasks'
-
-const StyledDialog = styled('dialog')`
-  border: none;
-  border-radius: 10px;
-  padding: 30px;
-  min-width: 400px;
-
-  :where(& input, & textarea, & label, & div) {
-    width: 100%;
-  }
-`
 
 const Title = styled('h2')`
   margin-bottom: 25px;
-`
-
-const StyledIconClose = styled(IconClose)`
-  fill: ${({ theme }) => theme.palette.primary.main};
-`
-
-const ButtonClose = styled('button')`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-
-  &:focus {
-    ${({ theme }) => theme.focus.input}
-    border-radius: 50%;
-  }
 `
 
 const Label = styled('label')`
@@ -81,7 +49,8 @@ const ButtonSubmit = styled('button')`
   border-radius: 10px;
   padding: 10px;
   width: 100%;
-  font-family: Rubik-Regular, Roboto, Arial, sans-serif;
+  font-family: Rubik, Roboto, Arial, sans-serif;
+  font-weight: 500;
 
   &:disabled {
     background: ${({ theme }) => theme.palette.grey[300]};
@@ -137,20 +106,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
   }
 
   return (
-    <StyledDialog ref={ref}>
-      <span
-        autoFocus
-        tabIndex={-1}
-      ></span>
-      {/* "утка" для фокуса при открытии dialog */}
-
-      <ButtonClose
-        onClick={handleCloseDialog}
-        tabIndex={0}
-      >
-        <StyledIconClose />
-      </ButtonClose>
-
+    <Dialog ref={ref}>
       <Title>Создаём новую задачу</Title>
 
       <form onSubmit={handleCreateNewTask}>
@@ -186,7 +142,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
 
         <ButtonSubmit disabled={!inputsValues.nameTask}>Создать</ButtonSubmit>
       </form>
-    </StyledDialog>
+    </Dialog>
   )
 })
 
