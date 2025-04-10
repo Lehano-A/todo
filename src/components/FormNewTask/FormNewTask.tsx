@@ -8,7 +8,6 @@ import { TaskType } from '../Main/Task/task.type'
 import useActionsWithTasks from '../hooks/useActionsWithTasks'
 
 const StyledDialog = styled('dialog')`
-  position: relative;
   border: none;
   border-radius: 10px;
   padding: 30px;
@@ -17,6 +16,10 @@ const StyledDialog = styled('dialog')`
   :where(& input, & textarea, & label, & div) {
     width: 100%;
   }
+`
+
+const Title = styled('h2')`
+  margin-bottom: 25px;
 `
 
 const StyledIconClose = styled(IconClose)`
@@ -147,6 +150,8 @@ const FormNewTask = forwardRef(function (props, ref: any) {
       >
         <StyledIconClose />
       </ButtonClose>
+
+      <Title>Создаём новую задачу</Title>
 
       <form onSubmit={handleCreateNewTask}>
         <Label>
