@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components'
 import App from './components/App/App'
 import store from './redux/store'
 import theme, { GlobalStyle } from './theme/theme'
-import GlobalFonts from './vendor/fonts/fonts'
+import './vendor/fonts/fonts.css'
 
 const container = document.getElementById('root') as HTMLElement
 const root = createRoot(container)
@@ -16,7 +16,7 @@ root.render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <GlobalFonts />
+        {/* <GlobalFonts /> */}
         <App />
       </ThemeProvider>
     </Provider>

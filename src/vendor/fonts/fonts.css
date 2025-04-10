@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Slackey';
+  src: local('Slackey Regular'), local('Slackey-Regular'), url('./Slackey/Slackey-Regular.woff2') format('woff2'),
+    url('./Slackey/Slackey-Regular.woff') format('woff'), url('./Slackey/Slackey-Regular.ttf') format('ttf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Rubik-Light';
+  src: local('Rubik Light'), url('./Rubik/Rubik-Light.woff2') format('woff2'),
+    url('./Rubik/Rubik-Light.woff') format('woff'), url('./Rubik/Rubik-Light.ttf') format('ttf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Rubik-Regular';
+  src: local('Rubik Regular'), url('./Rubik/Rubik-Regular.woff2') format('woff2'),
+    url('./Rubik/Rubik-Regular.woff') format('woff'), url('./Rubik/Rubik-Regular.ttf') format('ttf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Rubik-Medium';
+  src: local('Rubik Medium'), url('./Rubik/Rubik-Medium.woff2') format('woff2'),
+    url('./Rubik/Rubik-Medium.woff') format('woff'), url('./Rubik/Rubik-Medium.ttf') format('ttf');
+  font-weight: normal;
+}
