@@ -2,7 +2,7 @@ import { keyframes } from 'styled-components'
 
 const translateForward = keyframes`
   from {
-    transform: translateY(30px);
+    transform: translateY(50px);
   }
 
   to {
@@ -16,7 +16,7 @@ const translateBackward = keyframes`
   }
 
   to {
-    transform: translateY(30px);
+    transform: translateY(50px);
   }
 `
 

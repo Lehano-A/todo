@@ -5,7 +5,7 @@ const palette = {
   primary: { main: '#5433ff' },
   secondary: { main: '' },
   accent: { main: '' },
-  error: { main: '#ffadb7' },
+  error: { dark: '#ce001a', main: '#ffadb7' },
   bg: { main: '' },
   gradients: {
     main: 'linear-gradient(to right, #5433ff, #20bdff, #a5fecb)',
@@ -17,6 +17,11 @@ const palette = {
     300: '#e0e0e0',
     900: '#212121',
   },
+  taskColumns: {
+    todo: '#f5f5f5',
+    inProcess: 'rgba(250, 231, 179, 0.27)',
+    done: 'rgba(186, 245, 209, 0.27);',
+  },
 }
 
 const GlobalStyle = createGlobalStyle`
@@ -24,13 +29,17 @@ const GlobalStyle = createGlobalStyle`
 
   * {
     box-sizing: border-box;
+    font-size: 1.4rem;
   }
 
-  body {
+  :root {
+    font-size: 0.625rem;
     font-family: Rubik,  Roboto, Arial,
      sans-serif;
      font-weight: 400;
-     font-size: 1rem;
+  }
+
+  body {
      color: ${palette.grey[900]}
   }
 

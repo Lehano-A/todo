@@ -1,126 +1,125 @@
-import React, { TransitionEvent, useEffect, useRef, useState } from 'react'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
+import React, { MouseEvent, TransitionEvent, useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
 
-import { TODO_TASKS } from '../../../constants'
-import { ReactComponent as IconArrowDown } from '../../../images/icons/arrow-down.svg'
-import { ReactComponent as IconDelete } from '../../../images/icons/delete.svg'
+import { ColumnName, transfer } from '../../../redux/reducers/slices/tasksSlice'
 import increment from '../../../utils/increment'
-import useActionsWithTasks from '../../hooks/useActionsWithTasks'
-import DialogRemoveTask from './DialogRemoveTask/DialogRemoveTask'
-import { translateBackward, translateForward } from './animation/translate'
-import { StyledTaskProps } from './styledTask.type'
-import { TaskType } from './task.type'
+import TaskBody from './TaskBody/TaskBody'
+import TransferMenu from './TransferMenu/TransferMenu'
+import { StyledTaskProps, TaskType } from './task.type'
+
+const CommonWrapper = styled('div')<{ $hasDeadline: boolean }>`
+  position: relative;
+  padding-top: ${({ $hasDeadline }) => ($hasDeadline ? '25px' : 0)};
+`
 
 const StyledTask = styled('div')<StyledTaskProps>`
   position: relative;
   width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: ${({ $isActiveTransferMenu }) => $isActiveTransferMenu && 'center'};
+  align-items: ${({ $isActiveTransferMenu }) => $isActiveTransferMenu && 'center'};
+  height: ${({ $wasClickedButtonDescription, $styleParamsParent }) =>
+    $wasClickedButtonDescription && $styleParamsParent?.withDescription.height
+      ? $styleParamsParent?.withDescription.height
+      : $styleParamsParent?.default.height};
   background-color: white;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 20px 20px 50px 20px;
+  border-radius: ${({ $hasDeadline }) => ($hasDeadline ? 0 : '12px')} 12px 12px 12px;
   transition: height 0.6s ease;
   overflow: hidden;
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.1);
-  height: ${({ $wasClickedButtonDescription, $styleParamsParent }) =>
-    $wasClickedButtonDescription && $styleParamsParent?.height ? $styleParamsParent?.height : '80px'};
   word-break: break-word;
 
   &:hover {
-    & #buttonDeleteTask {
+    #taskControls {
       visibility: visible;
       opacity: 1;
     }
   }
 `
 
-const StyledIconDelete = styled(IconDelete)``
-
-const StyledIconArrowDown = styled(IconArrowDown)`
-  transform: ${({ $wasClickedButtonDescription }) => $wasClickedButtonDescription && 'rotate(180deg)'};
-  transition: transform 0.3s ease;
-`
-
-const Title = styled('h2')`
-  font-size: 1rem;
-  font-weight: 600;
-`
-
-const ButtonDelete = styled('button')`
-  width: 20px;
-  height: 20px;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+const TextDeadline = styled('time')`
   position: absolute;
-  top: 5px;
-  right: 5px;
+  padding: 5px;
+  top: 0px;
+  background: ${({ theme }) => theme.palette.error.dark};
+  color: #fff;
+  font-size: 1.3rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 `
 
-const ButtonShowDescription = styled('button')`
-  position: absolute;
-  left: 50%;
-  bottom: 0px;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 30px;
-`
-
-const TextDescription = styled('p')<StyledTaskProps>`
-  width: 100%;
-  margin: 20px 0 0;
-  visibility: ${({ $wasClickedButtonDescription, $isActiveDescription }) =>
-    $wasClickedButtonDescription ? 'visible' : !$isActiveDescription && 'hidden'};
-  animation: ${({ $wasClickedButtonDescription }) =>
-    css`
-      ${$wasClickedButtonDescription ? translateForward : translateBackward} 1s ease forwards
-    `};
-`
-
-interface TaskProps {
+export interface TaskProps {
   data: TaskType
+  currentColumnLocation: ColumnName
 }
 
-function Task({ data }: TaskProps) {
-  const { id } = data
-  const { removeTask } = useActionsWithTasks()
+export interface StyleParamsParentType {
+  default: {
+    height: string | null
+  }
+  withDescription: {
+    height: string | null
+  }
+}
+
+function Task({ data, currentColumnLocation }: TaskProps) {
+  const dispatch = useDispatch()
 
   const refTask = useRef<HTMLDivElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
-  const refDialog = useRef<HTMLDialogElement>(null)
 
+  const [isActiveTransferMenu, setIsActiveTransferMenu] = useState(false)
   const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
   const [isDisabledButtonShowDescription, setIsDisabledButtonShowDescription] = useState(false)
-  const [styleParamsParent, setStyleParamsParent] = useState<{ height: string | null }>({ height: null })
+  const [styleParamsParent, setStyleParamsParent] = useState<StyleParamsParentType>({
+    default: { height: null }, // параметры без description
+    withDescription: { height: null }, // параметры с description
+  })
 
   useEffect(() => {
     // расчёт высоты параграфа
     if (refTask.current && refTextDescription.current) {
-      const clientHeightTask = refTask.current.clientHeight
-      const clientHeightText = refTextDescription.current.clientHeight
+      if (wasClickedButtonDescription && styleParamsParent.withDescription.height === null) {
+        const clientHeightTask = refTask.current.clientHeight
+        const clientHeightText = refTextDescription.current.clientHeight
+        const values = [clientHeightTask, clientHeightText] // значения для высоты параграфа
 
-      const values = [clientHeightTask, clientHeightText] // значения для высоты параграфа
+        if (values.every((value): value is number => typeof value === 'number')) {
+          const calculatedHeight = increment(values)
 
-      if (values.every((value): value is number => typeof value === 'number')) {
-        const calculatedHeight = increment(values)
+          setStyleParamsParent((prevState) => ({
+            ...prevState,
+            withDescription: { height: `${calculatedHeight}px` },
+          }))
+        }
+      }
 
-        setStyleParamsParent((prevState) => ({
-          ...prevState,
-          height: `${calculatedHeight}px`,
-        }))
+      if (styleParamsParent.default.height === null) {
+        const height = `${String(refTask.current.offsetHeight)}px`
+
+        setStyleParamsParent((prevState) => ({ ...prevState, default: { height } }))
       }
     }
-  }, [])
+  }, [wasClickedButtonDescription])
 
-  // показать диалоговое окно удаления задачи
-  function showDialogRemoveTask() {
-    if (refDialog.current) {
-      refDialog.current.showModal()
-    }
+  // обработать клик на кнопку перемещения
+  function handleClickTransferTask() {
+    setIsActiveTransferMenu(true)
   }
 
-  // удалить задачу
-  function handleRemoveTask() {
-    removeTask(TODO_TASKS, id)
+  // оброботать перемещение задачи (в другую колонку)
+  function handleTransfer(e: MouseEvent<HTMLButtonElement>) {
+    const from = currentColumnLocation
+    const where = e.currentTarget.name
+
+    if (where === 'todo' || where === 'inProcess' || where === 'done') {
+      dispatch(transfer({ from, where, data }))
+    }
   }
 
   // показать описание задачи
@@ -133,7 +132,7 @@ function Task({ data }: TaskProps) {
     }
   }
 
-  // обработчик окончания перехода (завершения открытия/закрытия описания задачи)
+  // обработать окончание перехода (завершения открытия/закрытия описания задачи)
   function handleTransitionEnd(e: TransitionEvent) {
     if (e.propertyName === 'height') {
       if (!wasClickedButtonDescription) {
@@ -144,46 +143,46 @@ function Task({ data }: TaskProps) {
     }
   }
 
+  // обработать закрытие меню перемещения задачи
+  function handleCloseTransferMenu() {
+    setIsActiveTransferMenu(false)
+  }
+
   return (
-    <StyledTask
-      $styleParamsParent={styleParamsParent}
-      $wasClickedButtonDescription={wasClickedButtonDescription}
-      onTransitionEnd={handleTransitionEnd}
-      ref={refTask}
-    >
-      <Title>{data.nameTask}</Title>
+    <ClickAwayListener onClickAway={handleCloseTransferMenu}>
+      <CommonWrapper $hasDeadline={Boolean(data.deadline)}>
+        {data.deadline && <TextDeadline>выполнить до {data.deadline}</TextDeadline>}
 
-      <ButtonDelete
-        id='buttonDeleteTask'
-        onClick={showDialogRemoveTask}
-      >
-        <StyledIconDelete />
-      </ButtonDelete>
-
-      <DialogRemoveTask
-        data={data}
-        handleRemoveTask={handleRemoveTask}
-        refDialog={refDialog}
-      />
-
-      {data.description && (
-        <ButtonShowDescription
-          disabled={isDisabledButtonShowDescription}
-          onClick={handleShowDescription}
+        <StyledTask
+          $hasDeadline={Boolean(data.deadline)}
+          $isActiveTransferMenu={isActiveTransferMenu}
+          $styleParamsParent={styleParamsParent}
+          $wasClickedButtonDescription={wasClickedButtonDescription}
+          onTransitionEnd={handleTransitionEnd}
+          ref={refTask}
         >
-          <StyledIconArrowDown $wasClickedButtonDescription={wasClickedButtonDescription} />
-        </ButtonShowDescription>
-      )}
+          <TaskBody
+            data={data}
+            styleParamsParent={styleParamsParent}
+            refTextDescription={refTextDescription}
+            isActiveDescription={isActiveDescription}
+            isActiveTransferMenu={isActiveTransferMenu}
+            isDisabledButtonShowDescription={isDisabledButtonShowDescription}
+            wasClickedButtonDescription={wasClickedButtonDescription}
+            handleShowDescription={handleShowDescription}
+            handleClickTransferTask={handleClickTransferTask}
+          />
 
-      <TextDescription
-        $isActiveDescription={isActiveDescription}
-        $styleParamsParent={styleParamsParent}
-        $wasClickedButtonDescription={wasClickedButtonDescription}
-        ref={refTextDescription}
-      >
-        {data.description}
-      </TextDescription>
-    </StyledTask>
+          {isActiveTransferMenu && (
+            <TransferMenu
+              currentColumnLocation={currentColumnLocation}
+              handleTransfer={handleTransfer}
+              handleCloseTransferMenu={handleCloseTransferMenu}
+            />
+          )}
+        </StyledTask>
+      </CommonWrapper>
+    </ClickAwayListener>
   )
 }
 

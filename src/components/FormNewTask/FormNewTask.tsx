@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import uniqid from 'uniqid'
 
-import { TODO_TASKS } from '../../constants'
+import getFormattedDate from '../../utils/getFormattedDate'
 import { TaskType } from '../Main/Task/task.type'
 import Dialog from '../common/Dialog/Dialog'
 import useActionsWithTasks from '../hooks/useActionsWithTasks'
@@ -68,7 +68,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
 
   useEffect(() => {
     if (isPressedButtonCreateTask) {
-      addNewTask(TODO_TASKS, inputsValues)
+      addNewTask('todo', inputsValues)
     }
 
     return () => {
@@ -88,7 +88,10 @@ const FormNewTask = forwardRef(function (props, ref: any) {
   function handleInputValue(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
     const { name, value } = e.target
 
-    setInputsValues((prevState) => ({ ...prevState, [name]: value }))
+    setInputsValues((prevState) => ({
+      ...prevState,
+      [name]: `${name === 'deadline' ? getFormattedDate(value) : value}`,
+    }))
   }
 
   // обработать создание новой задачи
@@ -118,6 +121,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
             placeholder='Испечь пирожки...'
             required
             value={inputsValues.nameTask}
+            maxLength={300}
           />
         </Label>
 
@@ -136,6 +140,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
           Крайний срок выполнения
           <Deadline
             name='deadline'
+            onChange={handleInputValue}
             type='date'
           />
         </Label>

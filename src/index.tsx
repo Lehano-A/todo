@@ -16,7 +16,6 @@ root.render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        {/* <GlobalFonts /> */}
         <App />
       </ThemeProvider>
     </Provider>

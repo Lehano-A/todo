@@ -1,3 +1,7 @@
 const TODO_TASKS = 'todoTasks'
+const TODO_COLUMN_NAME = 'todo'
+const INPROCESS_COLUMN_NAME = 'inProcess'
+const DONE_COLUMN_NAME = 'done'
+const ALL_TASKS = 'tasks'
 
-export { TODO_TASKS }
+export { TODO_TASKS, ALL_TASKS, TODO_COLUMN_NAME, INPROCESS_COLUMN_NAME, DONE_COLUMN_NAME }
