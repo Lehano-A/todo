@@ -1,12 +1,16 @@
+import { DragDropContext, DropResult } from '@hello-pangea/dnd'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { getTasksFromLS } from '../../redux/reducers/slices/tasksSlice'
+import { getTasksFromLS, updateAfterDrag } from '../../redux/reducers/slices/tasksSlice'
+import { RootState } from '../../redux/store'
 import FormNewTask from '../FormNewTask/FormNewTask'
 import Done from './Columns/Done/Done'
 import InProcess from './Columns/InProcess/InProcess'
 import Todo from './Columns/Todo/Todo'
+import { TasksType } from './Task/task.type'
 
 const StyledMain = styled('main')`
   display: flex;
@@ -28,17 +32,39 @@ function Main() {
   const refFormAddTask = useRef(null)
   const dispatch = useDispatch()
 
+  const tasks = useSelector((state: RootState) => state.tasks)
+
   useEffect(() => {
     dispatch(getTasksFromLS())
   }, [])
 
+  function handleOnDragEnd(result: DropResult) {
+    const columnName = result.source.droppableId
+
+    if (result?.destination) {
+      const idFrom = result.source.index
+      const elFrom = tasks[columnName as keyof TasksType][idFrom]
+
+      const idWhere = result.destination.index
+      const elWhere = tasks[columnName as keyof TasksType][idWhere]
+
+      const copyTasks = JSON.parse(JSON.stringify(tasks[columnName as keyof TasksType]))
+      copyTasks.splice(idFrom, 1, elWhere)
+      copyTasks.splice(idWhere, 1, elFrom)
+
+      dispatch(updateAfterDrag({ columnTasks: copyTasks }))
+    }
+  }
+
   return (
     <StyledMain>
-      <Columns>
-        <Todo refFormAddTask={refFormAddTask} />
-        <InProcess />
-        <Done />
-      </Columns>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Columns>
+          <Todo refFormAddTask={refFormAddTask} />
+          <InProcess />
+          <Done />
+        </Columns>
+      </DragDropContext>
 
       <FormNewTask ref={refFormAddTask} />
     </StyledMain>

@@ -13,12 +13,14 @@ interface TasksState {
 export type ColumnName = 'todo' | 'inProcess' | 'done'
 
 interface TaskPayload {
+  locationId?: number
   columnName?: ColumnName
   task?: TaskType
   id?: string
   from?: ColumnName
   where?: ColumnName
   data?: TaskType
+  columnTasks?: TaskType[]
 }
 
 const initialState: TasksState = {
@@ -64,11 +66,20 @@ const tasksSlice = createSlice({
       }
     },
 
+    updateAfterDrag: (state, action: PayloadAction<TaskPayload>) => {
+      const allTasks = ls.get(ALL_TASKS)
+
+      if (allTasks && action.payload.columnTasks) {
+        allTasks.todo = action.payload.columnTasks
+        state.todo = action.payload.columnTasks
+        ls.updateColumns(allTasks)
+      }
+    },
+
     transfer: (state, action: PayloadAction<TaskPayload>) => {
       const { from, where, data } = action.payload
       const allTasks = ls.get(ALL_TASKS)
 
-      console.log(allTasks)
       if (from && where && data && allTasks) {
         const filtered = state[from].filter((el) => el.id !== data.id)
         state[from] = filtered
@@ -83,6 +94,6 @@ const tasksSlice = createSlice({
   },
 })
 
-export const { add, remove, getTasksFromLS, transfer } = tasksSlice.actions
+export const { add, remove, getTasksFromLS, updateAfterDrag, transfer } = tasksSlice.actions
 
 export default tasksSlice.reducer

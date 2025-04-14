@@ -1,3 +1,4 @@
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -75,29 +76,45 @@ function Todo({ refFormAddTask }: any) {
 
     dispatch(activateForm())
   }
-
   return (
-    <Box>
-      <ButtonAddTask onClick={showFormAddNewTask}>
-        <StyledAddIcon></StyledAddIcon>
-      </ButtonAddTask>
+    <Droppable droppableId='todo'>
+      {(provided) => (
+        <Box
+          className='todo'
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          <ButtonAddTask onClick={showFormAddNewTask}>
+            <StyledAddIcon></StyledAddIcon>
+          </ButtonAddTask>
 
-      <StyledTodo>
-        <TitleColumn>Сделать</TitleColumn>
+          <StyledTodo>
+            <TitleColumn>Сделать</TitleColumn>
 
-        {todoTasks.length > 0 ? (
-          todoTasks.map((task) => (
-            <Task
-              currentColumnLocation={TODO_COLUMN_NAME}
-              data={task}
-              key={task.id}
-            />
-          ))
-        ) : (
-          <TextNoTasks>Пока нет задач</TextNoTasks>
-        )}
-      </StyledTodo>
-    </Box>
+            {todoTasks.length > 0 ? (
+              todoTasks.map((task, index) => (
+                <Draggable
+                  key={task.id}
+                  draggableId={task.id}
+                  index={index}
+                >
+                  {(provided) => (
+                    <Task
+                      currentColumnLocation={TODO_COLUMN_NAME}
+                      data={task}
+                      provided={provided}
+                    />
+                  )}
+                </Draggable>
+              ))
+            ) : (
+              <TextNoTasks>Пока нет задач</TextNoTasks>
+            )}
+            {provided.placeholder}
+          </StyledTodo>
+        </Box>
+      )}
+    </Droppable>
   )
 }
 

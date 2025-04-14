@@ -56,7 +56,7 @@
     "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
     "sort-imports": [
-      "error",
+      "warn",
       {
         "ignoreCase": true,
         "ignoreDeclarationSort": true

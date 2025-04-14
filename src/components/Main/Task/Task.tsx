@@ -1,5 +1,6 @@
+import { DraggableProvided } from '@hello-pangea/dnd'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import React, { MouseEvent, TransitionEvent, useEffect, useRef, useState } from 'react'
+import React, { MouseEvent, TransitionEvent, forwardRef, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
 
@@ -12,6 +13,7 @@ import { StyledTaskProps, TaskType } from './task.type'
 const CommonWrapper = styled('div')<{ $hasDeadline: boolean }>`
   position: relative;
   padding-top: ${({ $hasDeadline }) => ($hasDeadline ? '25px' : 0)};
+  margin: 8px 0;
 `
 
 const StyledTask = styled('div')<StyledTaskProps>`
@@ -55,6 +57,7 @@ const TextDeadline = styled('time')`
 export interface TaskProps {
   data: TaskType
   currentColumnLocation: ColumnName
+  provided?: DraggableProvided
 }
 
 export interface StyleParamsParentType {
@@ -66,7 +69,7 @@ export interface StyleParamsParentType {
   }
 }
 
-function Task({ data, currentColumnLocation }: TaskProps) {
+function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const dispatch = useDispatch()
 
   const refTask = useRef<HTMLDivElement>(null)
@@ -150,7 +153,12 @@ function Task({ data, currentColumnLocation }: TaskProps) {
 
   return (
     <ClickAwayListener onClickAway={handleCloseTransferMenu}>
-      <CommonWrapper $hasDeadline={Boolean(data.deadline)}>
+      <CommonWrapper
+        {...provided?.draggableProps}
+        {...provided?.dragHandleProps}
+        ref={provided?.innerRef}
+        $hasDeadline={Boolean(data.deadline)}
+      >
         {data.deadline && <TextDeadline>выполнить до {data.deadline}</TextDeadline>}
 
         <StyledTask

@@ -8,7 +8,6 @@ const Column = styled('div')`
   align-items: center;
   padding: 20px 30px 150px;
   border-radius: 10px;
-  gap: 15px;
 `
 
 export default Column
