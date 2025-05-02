@@ -1,7 +1,9 @@
 import React, { forwardRef, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import uniqid from 'uniqid'
 
+import { deactivateForm } from '../../redux/reducers/slices/formAddTaskSlice'
 import getFormattedDate from '../../utils/getFormattedDate'
 import { TaskType } from '../Main/Task/task.type'
 import Dialog from '../common/Dialog/Dialog'
@@ -61,6 +63,8 @@ const ButtonSubmit = styled('button')`
 const defaultValues = { id: '', nameTask: '', description: '', deadline: '' }
 
 const FormNewTask = forwardRef(function (props, ref: any) {
+  const dispatch = useDispatch()
+
   const [inputsValues, setInputsValues] = useState<TaskType>(defaultValues)
   const [isPressedButtonCreateTask, setIsPressedButtonCreateTask] = useState(false)
 
@@ -69,11 +73,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
   useEffect(() => {
     if (isPressedButtonCreateTask) {
       addNewTask('todo', inputsValues)
-    }
-
-    return () => {
-      setIsPressedButtonCreateTask(false)
-      setInputsValues(defaultValues)
+      handleCloseDialog()
     }
   }, [isPressedButtonCreateTask])
 
@@ -81,6 +81,7 @@ const FormNewTask = forwardRef(function (props, ref: any) {
   function handleCloseDialog() {
     if (ref.current) {
       ref.current.close()
+      dispatch(deactivateForm())
     }
   }
 
@@ -98,41 +99,38 @@ const FormNewTask = forwardRef(function (props, ref: any) {
   function handleCreateNewTask(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    addNewTaskInLS()
-    handleCloseDialog()
-  }
-
-  // добавить новую задачу в ЛХ
-  function addNewTaskInLS() {
     setIsPressedButtonCreateTask(true)
     setInputsValues((prevState) => ({ ...prevState, id: uniqid() }))
   }
 
   return (
-    <Dialog ref={ref}>
+    <Dialog
+      ref={ref}
+      handleCloseDialog={handleCloseDialog}
+    >
       <Title>Создаём новую задачу</Title>
 
       <form onSubmit={handleCreateNewTask}>
         <Label>
           Название задачи
           <NameTask
-            name='nameTask'
-            onChange={handleInputValue}
-            placeholder='Испечь пирожки...'
             required
-            value={inputsValues.nameTask}
             maxLength={300}
+            name='nameTask'
+            placeholder='Испечь пирожки...'
+            value={inputsValues.nameTask}
+            onChange={handleInputValue}
           />
         </Label>
 
         <Label>
           Описание
           <Description
-            name='description'
-            onChange={handleInputValue}
-            placeholder='3 стакана муки, 1 стакан молока, дрожжи, кубик сливочного масла...'
             rows={9}
+            name='description'
+            placeholder='3 стакана муки, 1 стакан молока, дрожжи, кубик сливочного масла...'
             value={inputsValues.description}
+            onChange={handleInputValue}
           />
         </Label>
 
@@ -140,8 +138,8 @@ const FormNewTask = forwardRef(function (props, ref: any) {
           Крайний срок выполнения
           <Deadline
             name='deadline'
-            onChange={handleInputValue}
             type='date'
+            onChange={handleInputValue}
           />
         </Label>
 

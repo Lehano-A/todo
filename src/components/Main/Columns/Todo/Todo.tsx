@@ -63,19 +63,23 @@ function Todo({ refFormAddTask }: any) {
   const dispatch = useDispatch()
 
   const todoTasks = useSelector((state: RootState) => state.tasks.todo)
+  const isActiveFormAddTask = useSelector((state: RootState) => state.formAddTask.isActive)
 
   useEffect(() => {
     dispatch(getTasksFromLS('todo'))
   }, [])
 
-  // показать форму добавления новой задачи
-  function showFormAddNewTask() {
-    if (refFormAddTask.current) {
+  useEffect(() => {
+    if (isActiveFormAddTask && refFormAddTask.current) {
       refFormAddTask.current.showModal()
     }
+  }, [isActiveFormAddTask])
 
+  // активировать форму добавления новой задачи
+  function activateFormAddNewTask() {
     dispatch(activateForm())
   }
+
   return (
     <Droppable droppableId='todo'>
       {(provided) => (
@@ -84,7 +88,7 @@ function Todo({ refFormAddTask }: any) {
           ref={provided.innerRef}
           {...provided.droppableProps}
         >
-          <ButtonAddTask onClick={showFormAddNewTask}>
+          <ButtonAddTask onClick={activateFormAddNewTask}>
             <StyledAddIcon></StyledAddIcon>
           </ButtonAddTask>
 

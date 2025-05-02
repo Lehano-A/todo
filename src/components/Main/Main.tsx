@@ -33,6 +33,7 @@ function Main() {
   const dispatch = useDispatch()
 
   const tasks = useSelector((state: RootState) => state.tasks)
+  const isActiveFormAddTask = useSelector((state: RootState) => state.formAddTask.isActive)
 
   useEffect(() => {
     dispatch(getTasksFromLS())
@@ -66,7 +67,7 @@ function Main() {
         </Columns>
       </DragDropContext>
 
-      <FormNewTask ref={refFormAddTask} />
+      {isActiveFormAddTask && <FormNewTask ref={refFormAddTask} />}
     </StyledMain>
   )
 }

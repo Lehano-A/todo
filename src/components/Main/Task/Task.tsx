@@ -1,6 +1,6 @@
 import { DraggableProvided } from '@hello-pangea/dnd'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import React, { MouseEvent, TransitionEvent, forwardRef, useEffect, useRef, useState } from 'react'
+import React, { MouseEvent, TransitionEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
 

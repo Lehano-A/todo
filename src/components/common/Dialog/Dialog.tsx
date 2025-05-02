@@ -36,9 +36,15 @@ const ButtonClose = styled('button')`
   }
 `
 
-const Dialog = forwardRef(function ({ children }: React.PropsWithChildren & { title?: string }, ref: any) {
+interface DialogProps {
+  title?: string
+  handleCloseDialog?: () => void
+}
+
+const Dialog = forwardRef(function ({ children, handleCloseDialog }: React.PropsWithChildren & DialogProps, ref: any) {
   // обработать закрытие диалогового окна
-  function handleCloseDialog() {
+
+  function handleClose() {
     if (ref.current) {
       ref.current.close()
     }
@@ -53,7 +59,7 @@ const Dialog = forwardRef(function ({ children }: React.PropsWithChildren & { ti
       {/* "утка" для фокуса при открытии dialog */}
 
       <ButtonClose
-        onClick={handleCloseDialog}
+        onClick={handleCloseDialog || handleClose}
         tabIndex={0}
       >
         <StyledIconClose />
