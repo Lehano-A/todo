@@ -1,10 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
-import formAddTaskSlice from './slices/formAddTaskSlice'
+import formNewTaskSlice from './slices/formNewTaskSlice'
 import tasksSlice from './slices/tasksSlice'
 
 const rootReducer = combineReducers({
-  formAddTask: formAddTaskSlice,
+  formNewTask: formNewTaskSlice,
   tasks: tasksSlice,
 })
 

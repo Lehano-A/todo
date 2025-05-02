@@ -33,12 +33,13 @@ function Main() {
   const dispatch = useDispatch()
 
   const tasks = useSelector((state: RootState) => state.tasks)
-  const isActiveFormAddTask = useSelector((state: RootState) => state.formAddTask.isActive)
+  const isActiveFormAddTask = useSelector((state: RootState) => state.formNewTask.isActive)
 
   useEffect(() => {
     dispatch(getTasksFromLS())
   }, [])
 
+  // обработать drop (DnD) перемещения задачи
   function handleOnDragEnd(result: DropResult) {
     const columnName = result.source.droppableId
 

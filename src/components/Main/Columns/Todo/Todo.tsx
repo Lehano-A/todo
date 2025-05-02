@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { TODO_COLUMN_NAME } from '../../../../constants'
 import { ReactComponent as AddIcon } from '../../../../images/icons/add.svg'
-import { activateForm } from '../../../../redux/reducers/slices/formAddTaskSlice'
+import { activateForm } from '../../../../redux/reducers/slices/formNewTaskSlice'
 import { getTasksFromLS } from '../../../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../../../redux/store'
 import Column from '../../../../styled/column'
@@ -63,7 +63,7 @@ function Todo({ refFormAddTask }: any) {
   const dispatch = useDispatch()
 
   const todoTasks = useSelector((state: RootState) => state.tasks.todo)
-  const isActiveFormAddTask = useSelector((state: RootState) => state.formAddTask.isActive)
+  const isActiveFormAddTask = useSelector((state: RootState) => state.formNewTask.isActive)
 
   useEffect(() => {
     dispatch(getTasksFromLS('todo'))

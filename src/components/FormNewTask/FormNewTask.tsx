@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import uniqid from 'uniqid'
 
-import { deactivateForm } from '../../redux/reducers/slices/formAddTaskSlice'
+import { deactivateForm } from '../../redux/reducers/slices/formNewTaskSlice'
 import getFormattedDate from '../../utils/getFormattedDate'
 import { TaskType } from '../Main/Task/task.type'
 import Dialog from '../common/Dialog/Dialog'

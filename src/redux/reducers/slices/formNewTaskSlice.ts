@@ -4,8 +4,8 @@ const initialState = {
   isActive: false,
 }
 
-const formAddTaskSlice = createSlice({
-  name: 'formAddTask',
+const formNewTaskSlice = createSlice({
+  name: 'formNewTask',
   initialState,
   reducers: {
     activateForm: (state) => {
@@ -18,6 +18,6 @@ const formAddTaskSlice = createSlice({
   },
 })
 
-export const { activateForm, deactivateForm } = formAddTaskSlice.actions
+export const { activateForm, deactivateForm } = formNewTaskSlice.actions
 
-export default formAddTaskSlice.reducer
+export default formNewTaskSlice.reducer
