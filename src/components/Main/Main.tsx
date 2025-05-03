@@ -41,18 +41,17 @@ function Main() {
 
   // обработать drop (DnD) перемещения задачи
   function handleOnDragEnd(result: DropResult) {
-    const columnName = result.source.droppableId
+    const { source, destination } = result
 
-    if (result?.destination) {
-      const idFrom = result.source.index
+    if (destination) {
+      const columnName = source.droppableId
+      const idFrom = source.index
+      const idWhere = destination.index
       const elFrom = tasks[columnName as keyof TasksType][idFrom]
 
-      const idWhere = result.destination.index
-      const elWhere = tasks[columnName as keyof TasksType][idWhere]
-
       const copyTasks = JSON.parse(JSON.stringify(tasks[columnName as keyof TasksType]))
-      copyTasks.splice(idFrom, 1, elWhere)
-      copyTasks.splice(idWhere, 1, elFrom)
+      copyTasks.splice(idFrom, 1) // удаляем переносимый элемент
+      copyTasks.splice(idWhere, 0, elFrom) // вставляем переносимый элемент в выбранное место
 
       dispatch(updateAfterDrag({ columnTasks: copyTasks }))
     }
