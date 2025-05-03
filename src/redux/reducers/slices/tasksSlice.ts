@@ -75,25 +75,9 @@ const tasksSlice = createSlice({
         ls.updateColumns(state)
       }
     },
-
-    transfer: (state, action: PayloadAction<TaskPayload>) => {
-      const { from, where, data } = action.payload
-      const allTasks = ls.get(ALL_TASKS)
-
-      if (from && where && data && allTasks) {
-        const filtered = state[from].filter((el) => el.id !== data.id)
-        state[from] = filtered
-        state[where].push(data)
-
-        allTasks[from] = filtered
-        allTasks[where] = state[where]
-
-        ls.updateColumns(allTasks)
-      }
-    },
   },
 })
 
-export const { add, remove, getTasksFromLS, updateAfterDrag, transfer } = tasksSlice.actions
+export const { add, remove, getTasksFromLS, updateAfterDrag } = tasksSlice.actions
 
 export default tasksSlice.reducer

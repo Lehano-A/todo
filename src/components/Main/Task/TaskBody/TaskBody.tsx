@@ -1,20 +1,14 @@
-import React, { forwardRef, useRef } from 'react'
+import React, { useRef } from 'react'
 import styled, { css } from 'styled-components'
 
+import { TODO_COLUMN_NAME } from '../../../../constants'
 import { ReactComponent as IconArrowDown } from '../../../../images/icons/arrow-down.svg'
 import { ReactComponent as IconDelete } from '../../../../images/icons/delete.svg'
-import { ReactComponent as IconTransfer } from '../../../../images/icons/transfer.svg'
 import useActionsWithTasks from '../../../hooks/useActionsWithTasks'
 import DialogRemoveTask from '../DialogRemoveTask/DialogRemoveTask'
-import { StyleParamsParentType, TaskProps } from '../Task'
+import { StyleParamsParentType } from '../Task'
 import { StyledTaskProps, TaskType } from '../task.type'
 import { translateBackward, translateForward } from './animation/translate'
-
-const Box = styled('div')<{ $isActiveTransferMenu: boolean }>`
-  visibility: ${({ $isActiveTransferMenu }) => ($isActiveTransferMenu ? 'hidden' : 'visible')};
-`
-
-const StyledIconTransfer = styled(IconTransfer)``
 
 const StyledIconDelete = styled(IconDelete)``
 
@@ -46,8 +40,6 @@ const StyledControl = styled('button')`
 
 const ControlDelete = styled(StyledControl)``
 
-const ControlTransfer = styled(StyledControl)``
-
 const ButtonShowDescription = styled('button')`
   position: absolute;
   left: 50%;
@@ -72,18 +64,13 @@ const TextDescription = styled('p')<StyledTaskProps>`
   }};
 `
 
-// visibility: ${({ $wasClickedButtonDescription, $isActiveDescription }) =>
-//   $wasClickedButtonDescription ? 'visible' : !$isActiveDescription && 'hidden'};
-
 interface TaskBodyProps {
   data: TaskType
   styleParamsParent: StyleParamsParentType
   refTextDescription: React.RefObject<HTMLDivElement>
   isActiveDescription: boolean
-  isActiveTransferMenu: boolean
   isDisabledButtonShowDescription: boolean
   wasClickedButtonDescription: boolean
-  handleClickTransferTask: () => void
   handleShowDescription: () => void
 }
 
@@ -92,10 +79,8 @@ function TaskBody({
   styleParamsParent,
   refTextDescription,
   isActiveDescription,
-  isActiveTransferMenu,
   isDisabledButtonShowDescription,
   wasClickedButtonDescription,
-  handleClickTransferTask,
   handleShowDescription,
 }: TaskBodyProps) {
   const refDialog = useRef<HTMLDialogElement>(null)
@@ -111,18 +96,14 @@ function TaskBody({
 
   // удалить задачу
   function handleRemoveTask() {
-    removeTask('todo', id)
+    removeTask(TODO_COLUMN_NAME, id)
   }
 
   return (
-    <Box $isActiveTransferMenu={isActiveTransferMenu}>
+    <>
       <Title>{data.nameTask}</Title>
 
       <Controls id='taskControls'>
-        <ControlTransfer onClick={handleClickTransferTask}>
-          <StyledIconTransfer />
-        </ControlTransfer>
-
         <ControlDelete onClick={showDialogRemoveTask}>
           <StyledIconDelete />
         </ControlDelete>
@@ -151,7 +132,7 @@ function TaskBody({
       >
         {data.description}
       </TextDescription>
-    </Box>
+    </>
   )
 }
 

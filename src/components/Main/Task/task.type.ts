@@ -15,7 +15,6 @@ export interface TaskType {
 
 export interface StyledTaskProps {
   $hasDeadline?: boolean
-  $isActiveTransferMenu?: boolean
   $styleParamsParent?: StyleParamsParentType
   $isDisabledButtonShowDescription?: boolean
   $isActiveDescription?: boolean
