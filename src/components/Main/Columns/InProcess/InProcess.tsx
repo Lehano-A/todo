@@ -1,3 +1,4 @@
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -19,17 +20,34 @@ function InProcess() {
   const inProcessTasks = useSelector((state: RootState) => state.tasks.inProcess)
 
   return (
-    <StyledInProcess>
-      <TitleColumn>В процессе</TitleColumn>
+    <Droppable droppableId='inProcess'>
+      {(provided) => (
+        <StyledInProcess
+          className='inProcess'
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          <TitleColumn>В процессе</TitleColumn>
 
-      {inProcessTasks.map((task) => (
-        <Task
-          currentColumnLocation={INPROCESS_COLUMN_NAME}
-          data={task}
-          key={task.id}
-        />
-      ))}
-    </StyledInProcess>
+          {inProcessTasks.map((task, index) => (
+            <Draggable
+              key={task.id}
+              draggableId={task.id}
+              index={index}
+            >
+              {(provided) => (
+                <Task
+                  currentColumnLocation={INPROCESS_COLUMN_NAME}
+                  data={task}
+                  provided={provided}
+                />
+              )}
+            </Draggable>
+          ))}
+          {provided.placeholder}
+        </StyledInProcess>
+      )}
+    </Droppable>
   )
 }
 

@@ -1,5 +1,5 @@
 import { DragDropContext, DropResult } from '@hello-pangea/dnd'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -34,26 +34,33 @@ function Main() {
 
   const tasks = useSelector((state: RootState) => state.tasks)
   const isActiveFormAddTask = useSelector((state: RootState) => state.formNewTask.isActive)
+  const [wasDrop, setWasDrop] = useState<boolean | null>(null)
 
   useEffect(() => {
-    dispatch(getTasksFromLS())
-  }, [])
+    if (wasDrop === null || wasDrop) {
+      dispatch(getTasksFromLS())
+      setWasDrop(false)
+    }
+  }, [wasDrop])
 
   // обработать drop (DnD) перемещения задачи
   function handleOnDragEnd(result: DropResult) {
     const { source, destination } = result
 
+    const columnFrom = source.droppableId
+    const columnWhere = destination?.droppableId
+
     if (destination) {
-      const columnName = source.droppableId
-      const idFrom = source.index
-      const idWhere = destination.index
-      const elFrom = tasks[columnName as keyof TasksType][idFrom]
+      const idPlaceFrom = source.index
+      const idPlaceWhere = destination.index
+      const elFrom = tasks[columnFrom as keyof TasksType][idPlaceFrom]
 
-      const copyTasks = JSON.parse(JSON.stringify(tasks[columnName as keyof TasksType]))
-      copyTasks.splice(idFrom, 1) // удаляем переносимый элемент
-      copyTasks.splice(idWhere, 0, elFrom) // вставляем переносимый элемент в выбранное место
+      const copyTasks = JSON.parse(JSON.stringify(tasks))
+      copyTasks[columnFrom as keyof TasksType].splice(idPlaceFrom, 1) // удаляем переносимый элемент
+      copyTasks[columnWhere as keyof TasksType].splice(idPlaceWhere, 0, elFrom) // вставляем переносимый элемент в выбранное место
 
-      dispatch(updateAfterDrag({ columnTasks: copyTasks }))
+      dispatch(updateAfterDrag({ tasks: copyTasks }))
+      setWasDrop(true)
     }
   }
 

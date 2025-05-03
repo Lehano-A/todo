@@ -20,7 +20,7 @@ interface TaskPayload {
   from?: ColumnName
   where?: ColumnName
   data?: TaskType
-  columnTasks?: TaskType[]
+  tasks?: TasksState
 }
 
 const initialState: TasksState = {
@@ -69,10 +69,10 @@ const tasksSlice = createSlice({
     updateAfterDrag: (state, action: PayloadAction<TaskPayload>) => {
       const allTasks = ls.get(ALL_TASKS)
 
-      if (allTasks && action.payload.columnTasks) {
-        allTasks.todo = action.payload.columnTasks
-        state.todo = action.payload.columnTasks
-        ls.updateColumns(allTasks)
+      if (allTasks && action.payload.tasks) {
+        action.payload.tasks
+        state = action.payload.tasks
+        ls.updateColumns(state)
       }
     },
 
