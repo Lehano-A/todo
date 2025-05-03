@@ -14,7 +14,7 @@ import Task from '../Task/Task'
 import { TasksType } from '../Task/task.type'
 import { Columns, StyledColumnProps } from './columns.type'
 
-const Box = styled('div')`
+const BoxForStickyAddButton = styled('div')`
   position: relative;
   display: flex;
   background-color: transparent;
@@ -26,7 +26,9 @@ const StyledColumn = styled(Column)<StyledColumnProps>`
 `
 
 const TitleColumn = styled('h2')`
-  // margin-top: -20px;
+  position: absolute;
+  top: -10px;
+  font-size: 1.8rem;
   margin-bottom: 40px;
 `
 
@@ -53,13 +55,6 @@ const ButtonAddTask = styled('button')`
       fill: white;
     }
   }
-`
-
-const TextNoTasks = styled('p')`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `
 
 const columns: Columns[] = [
@@ -117,43 +112,40 @@ function TaskColumns() {
             droppableId={columnName}
           >
             {(provided) => (
-              <Box
-                className={columnName}
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
+              <BoxForStickyAddButton>
                 {columnName === TODO_COLUMN_NAME && (
                   <ButtonAddTask onClick={activateFormAddNewTask}>
                     <StyledAddIcon></StyledAddIcon>
                   </ButtonAddTask>
                 )}
 
-                <StyledColumn $bgColor={columnName}>
+                <StyledColumn
+                  $bgColor={columnName}
+                  className={columnName}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
                   <TitleColumn>{title}</TitleColumn>
 
-                  {allTasks[columnName].length > 0 ? (
-                    allTasks[columnName].map((task, index) => (
-                      <Draggable
-                        key={task.id}
-                        draggableId={task.id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <Task
-                            currentColumnLocation={columnName}
-                            data={task}
-                            provided={provided}
-                          />
-                        )}
-                      </Draggable>
-                    ))
-                  ) : (
-                    <TextNoTasks>Тут пока пусто</TextNoTasks>
-                  )}
+                  {allTasks[columnName].map((task, index) => (
+                    <Draggable
+                      key={task.id}
+                      draggableId={task.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <Task
+                          currentColumnLocation={columnName}
+                          data={task}
+                          provided={provided}
+                        />
+                      )}
+                    </Draggable>
+                  ))}
 
                   {provided.placeholder}
                 </StyledColumn>
-              </Box>
+              </BoxForStickyAddButton>
             )}
           </Droppable>
         )
