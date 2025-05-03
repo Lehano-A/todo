@@ -65,7 +65,7 @@ function DialogRemoveTask({
     <Dialog ref={refDialog}>
       <CommonBox>
         <Text>
-          Вы действительно хотите удалить эту задачу <StyledNameTask>{nameTask}</StyledNameTask>?
+          Вы действительно хотите удалить задачу <StyledNameTask>{nameTask}</StyledNameTask>?
         </Text>
 
         <ButtonsBox>
