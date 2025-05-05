@@ -1,40 +1,14 @@
-import { TaskType, TasksType } from '../components/Main/Task/task.type'
+import { TasksType } from '../components/Main/Task/task.type'
+import { ALL_TASKS } from '../constants'
 
 const ls = {
-  get: function (key: string) {
-    return parsingDataFromLS(key)
+  getAllTasks: function () {
+    return parsingDataFromLS(ALL_TASKS)
   },
 
-  add: function (key: string, columnName: string, value: TaskType) {
-    const parsedData = parsingDataFromLS(key)
-
-    // если данные внутри ЛХ это - массив
-    if (parsedData?.todo) {
-      parsedData.todo.push(value)
-      localStorage.setItem(key, JSON.stringify(parsedData))
-      return
-    }
-
-    if (!parsedData) initialLS(value)
+  saveTasks: function (newData: TasksType) {
+    localStorage.setItem(ALL_TASKS, JSON.stringify(newData))
   },
-
-  updateColumns: function (data: { todo: TaskType[]; inProcess: TaskType[]; done: TaskType[] }) {
-    localStorage.setItem('tasks', JSON.stringify(data))
-  },
-
-  remove: function (key: string, columnName: string, value: string) {
-    const parsedData = parsingDataFromLS(key)
-
-    // если данные внутри ЛХ это - массив
-    if (Array.isArray(parsedData)) {
-      const filtered = parsedData.filter((item) => item.id !== value)
-      localStorage.setItem(key, JSON.stringify(filtered))
-    }
-  },
-}
-
-function initialLS(value: TaskType) {
-  localStorage.setItem('tasks', JSON.stringify({ todo: [value], inProcess: [], done: [] }))
 }
 
 function parsingDataFromLS(key: string): TasksType | null {
