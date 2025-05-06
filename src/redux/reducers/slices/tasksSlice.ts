@@ -1,64 +1,39 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-import { TaskType } from '../../../components/Main/Task/task.type'
-import { ALL_TASKS } from '../../../constants'
-import ls from '../../../utils/localStorage'
+import { TODO_COLUMN_NAME } from '../../../constants'
+import { EditTaskPayload, RemoveTaskPayload, TransferTaskPayload } from '../../types/payloads/tasksPayload.types'
+import { TasksState } from '../../types/slices/tasksSlice.types'
 
-interface TasksState {
-  todo: TaskType[]
-  inProcess: TaskType[]
-  done: TaskType[]
-}
-
-export type ColumnName = 'todo' | 'inProcess' | 'done'
-
-interface TaskPayload {
-  locationId?: number
-  columnName?: ColumnName
-  task?: TaskType
-  id?: string
-  from?: ColumnName
-  where?: ColumnName
-  data?: TaskType
-  tasks?: TasksState
-}
-
-const initialState: TasksState = {
+export const defaultTasks = {
   todo: [],
   inProcess: [],
   done: [],
 }
 
-const tasksSlice = createSlice({
+const initialState: TasksState = defaultTasks
+
+export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    add: (state, action: PayloadAction<TaskPayload>) => {
-      const { columnName, task } = action.payload
-      if (columnName && task) state[columnName].push(task)
+    // инициализировать задачи при запуске приложения
+    initialTasks: (state, action) => {
+      const { allTasks } = action.payload
+      const { todo, inProcess, done } = allTasks
+      state.todo = todo
+      state.inProcess = inProcess
+      state.done = done
     },
 
-    getTasksFromLS: (state, action: PayloadAction<TaskPayload['columnName']>) => {
-      const columnName = action.payload
-      const allTasks = ls.get(ALL_TASKS)
-
-      if (columnName) {
-        const tasksFromColumn = allTasks?.[columnName]
-
-        if (Array.isArray(tasksFromColumn)) {
-          state[columnName] = tasksFromColumn
-        }
-      }
-
-      if (allTasks) {
-        state.todo = allTasks.todo
-        state.inProcess = allTasks.inProcess
-        state.done = allTasks.done
-      }
+    // добавить новую задачу
+    addNewTask: (state, action) => {
+      state[TODO_COLUMN_NAME].push(action.payload)
     },
 
-    remove: (state, action: PayloadAction<TaskPayload>) => {
+    // удалить задачу
+    removeTask: (state, action: PayloadAction<RemoveTaskPayload>) => {
       const { columnName, id } = action.payload
+
       if (columnName) {
         const filtered = state[columnName].filter((task) => task.id !== id)
 
@@ -66,18 +41,32 @@ const tasksSlice = createSlice({
       }
     },
 
-    updateAfterDrag: (state, action: PayloadAction<TaskPayload>) => {
-      const allTasks = ls.get(ALL_TASKS)
+    // переместить задачу в другую колонку
+    transferTask: (state, action: PayloadAction<TransferTaskPayload>) => {
+      const { columnFrom, columnWhere, idPlaceFrom, idPlaceWhere } = action.payload
+      const elFrom = state[columnFrom][idPlaceFrom]
 
-      if (allTasks && action.payload.tasks) {
-        action.payload.tasks
-        state = action.payload.tasks
-        ls.updateColumns(state)
-      }
+      state[columnFrom].splice(idPlaceFrom, 1) // удаляем переносимый элемент
+      state[columnWhere].splice(idPlaceWhere, 0, elFrom) //
+    },
+
+    // редактировать задачу
+    editTask: (state, action: PayloadAction<EditTaskPayload>) => {
+      const { columnName, newData, id } = action.payload
+
+      const updatedColumn = state[columnName].map((task) => {
+        if (task.id === id) {
+          task = newData
+        }
+
+        return task
+      })
+
+      state[columnName] = updatedColumn
     },
   },
 })
 
-export const { add, remove, getTasksFromLS, updateAfterDrag } = tasksSlice.actions
+export const { addNewTask, removeTask, initialTasks, transferTask, editTask } = tasksSlice.actions
 
 export default tasksSlice.reducer
