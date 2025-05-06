@@ -1,5 +1,7 @@
 import { TasksType } from '../Task/task.type'
 
+export type ColumnName = 'todo' | 'inProcess' | 'done'
+
 export interface Columns {
   columnName: keyof TasksType
   title: string

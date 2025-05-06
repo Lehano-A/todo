@@ -1,13 +1,13 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
+import dialogsSlice from './slices/dialogsSlice'
 import dndSlice from './slices/dndSlice'
-import formNewTaskSlice from './slices/formNewTaskSlice'
 import tasksSlice from './slices/tasksSlice'
 
 const rootReducer = combineReducers({
-  formNewTask: formNewTaskSlice,
   tasks: tasksSlice,
   dnd: dndSlice,
+  dialogs: dialogsSlice,
 })
 
 export default rootReducer

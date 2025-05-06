@@ -2,8 +2,8 @@ import { DraggableProvided } from '@hello-pangea/dnd'
 import React, { TransitionEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { ColumnName } from '../../../redux/reducers/slices/tasksSlice'
 import increment from '../../../utils/increment'
+import { ColumnName } from '../Columns/columns.type'
 import TaskBody from './TaskBody/TaskBody'
 import { StyledTaskProps, TaskType } from './task.type'
 
@@ -64,7 +64,7 @@ export interface StyleParamsParentType {
   }
 }
 
-function Task({ data, provided }: TaskProps) {
+function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const refTask = useRef<HTMLDivElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
 
@@ -147,6 +147,7 @@ function Task({ data, provided }: TaskProps) {
           isDisabledButtonShowDescription={isDisabledButtonShowDescription}
           wasClickedButtonDescription={wasClickedButtonDescription}
           handleShowDescription={handleShowDescription}
+          currentColumnLocation={currentColumnLocation}
         />
       </StyledTask>
     </CommonWrapper>

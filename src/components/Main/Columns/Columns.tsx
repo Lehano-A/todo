@@ -1,17 +1,19 @@
 import { DragDropContext, Draggable, DropResult, Droppable } from '@hello-pangea/dnd'
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { DONE_COLUMN_NAME, INPROCESS_COLUMN_NAME, TODO_COLUMN_NAME } from '../../../constants'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { ReactComponent as AddIcon } from '../../../images/icons/add.svg'
+import { initialTasksThunk } from '../../../redux/actions/tasksActions'
+import { openDialog } from '../../../redux/reducers/slices/dialogsSlice'
 import { disableDrop, enableDrop } from '../../../redux/reducers/slices/dndSlice'
-import { activateForm } from '../../../redux/reducers/slices/formNewTaskSlice'
-import { getTasksFromLS, updateAfterDrag } from '../../../redux/reducers/slices/tasksSlice'
+import { transferTask } from '../../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../../redux/store'
 import Column from '../../../styled/column'
 import Task from '../Task/Task'
-import { TasksType } from '../Task/task.type'
+import { TaskType, TasksType } from '../Task/task.type'
 import { Columns, StyledColumnProps } from './columns.type'
 
 const BoxForStickyAddButton = styled('div')`
@@ -64,42 +66,39 @@ const columns: Columns[] = [
 ]
 
 function TaskColumns() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const allTasks = useSelector((state: RootState) => state.tasks)
   const wasDrop = useSelector((state: RootState) => state.dnd.wasDrop)
 
   useEffect(() => {
+    dispatch(initialTasksThunk())
+  }, [])
+
+  useEffect(() => {
     if (wasDrop) {
       dispatch(disableDrop())
     }
-
-    dispatch(getTasksFromLS())
   }, [wasDrop])
 
   // обработать drop (DnD) перемещения задачи
   function handleOnDragEnd(result: DropResult) {
     const { source, destination } = result
-    const columnFrom = source.droppableId
-    const columnWhere = destination?.droppableId
+    const columnFrom = source.droppableId as keyof TasksType
+    const columnWhere = destination?.droppableId as keyof TasksType
 
     if (destination) {
       const idPlaceFrom = source.index
       const idPlaceWhere = destination.index
-      const elFrom = allTasks[columnFrom as keyof TasksType][idPlaceFrom]
 
-      const copyTasks = JSON.parse(JSON.stringify(allTasks))
-      copyTasks[columnFrom as keyof TasksType].splice(idPlaceFrom, 1) // удаляем переносимый элемент
-      copyTasks[columnWhere as keyof TasksType].splice(idPlaceWhere, 0, elFrom) // вставляем переносимый элемент в выбранное место
-
-      dispatch(updateAfterDrag({ tasks: copyTasks }))
+      dispatch(transferTask({ columnFrom, columnWhere, idPlaceFrom, idPlaceWhere }))
       dispatch(enableDrop())
     }
   }
 
   // активировать форму добавления новой задачи
-  function activateFormAddNewTask() {
-    dispatch(activateForm())
+  function openDialogAddNewTask() {
+    dispatch(openDialog({ dialogName: 'dialogAddNewTask' }))
   }
 
   return (
@@ -114,7 +113,7 @@ function TaskColumns() {
             {(provided) => (
               <BoxForStickyAddButton>
                 {columnName === TODO_COLUMN_NAME && (
-                  <ButtonAddTask onClick={activateFormAddNewTask}>
+                  <ButtonAddTask onClick={openDialogAddNewTask}>
                     <StyledAddIcon></StyledAddIcon>
                   </ButtonAddTask>
                 )}
@@ -127,21 +126,23 @@ function TaskColumns() {
                 >
                   <TitleColumn>{title}</TitleColumn>
 
-                  {allTasks[columnName].map((task, index) => (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <Task
-                          currentColumnLocation={columnName}
-                          data={task}
-                          provided={provided}
-                        />
-                      )}
-                    </Draggable>
-                  ))}
+                  {allTasks[columnName].map((task: TaskType, index) => {
+                    return (
+                      <Draggable
+                        key={task.id}
+                        draggableId={task.id}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <Task
+                            currentColumnLocation={columnName}
+                            data={task}
+                            provided={provided}
+                          />
+                        )}
+                      </Draggable>
+                    )
+                  })}
 
                   {provided.placeholder}
                 </StyledColumn>

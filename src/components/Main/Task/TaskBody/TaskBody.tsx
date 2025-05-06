@@ -1,16 +1,14 @@
-import React, { useRef } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
 
-import { TODO_COLUMN_NAME } from '../../../../constants'
 import { ReactComponent as IconArrowDown } from '../../../../images/icons/arrow-down.svg'
 import { ReactComponent as IconDelete } from '../../../../images/icons/delete.svg'
-import useActionsWithTasks from '../../../hooks/useActionsWithTasks'
-import DialogRemoveTask from '../DialogRemoveTask/DialogRemoveTask'
-import { StyleParamsParentType } from '../Task'
+import { ReactComponent as IconEdit } from '../../../../images/icons/edit.svg'
+import { openDialog } from '../../../../redux/reducers/slices/dialogsSlice'
+import { StyleParamsParentType, TaskProps } from '../Task'
 import { StyledTaskProps, TaskType } from '../task.type'
 import { translateBackward, translateForward } from './animation/translate'
-
-const StyledIconDelete = styled(IconDelete)``
 
 const StyledIconArrowDown = styled(IconArrowDown)`
   transform: ${({ $wasClickedButtonDescription }) => $wasClickedButtonDescription && 'rotate(180deg)'};
@@ -38,7 +36,11 @@ const StyledControl = styled('button')`
   height: 20px;
 `
 
-const ControlDelete = styled(StyledControl)``
+const Control = styled(StyledControl)``
+
+const StyledIconEdit = styled(IconEdit)``
+
+const StyledIconDelete = styled(IconDelete)``
 
 const ButtonShowDescription = styled('button')`
   position: absolute;
@@ -71,6 +73,7 @@ interface TaskBodyProps {
   isActiveDescription: boolean
   isDisabledButtonShowDescription: boolean
   wasClickedButtonDescription: boolean
+  currentColumnLocation: TaskProps['currentColumnLocation']
   handleShowDescription: () => void
 }
 
@@ -82,21 +85,18 @@ function TaskBody({
   isDisabledButtonShowDescription,
   wasClickedButtonDescription,
   handleShowDescription,
+  currentColumnLocation,
 }: TaskBodyProps) {
-  const refDialog = useRef<HTMLDialogElement>(null)
-  const { removeTask } = useActionsWithTasks()
-  const { id } = data
+  const dispatch = useDispatch()
 
   // показать диалоговое окно удаления задачи
   function showDialogRemoveTask() {
-    if (refDialog.current) {
-      refDialog.current.showModal()
-    }
+    dispatch(openDialog({ dialogName: 'dialogRemoveTask', data, columnName: currentColumnLocation }))
   }
 
-  // удалить задачу
-  function handleRemoveTask() {
-    removeTask(TODO_COLUMN_NAME, id)
+  // показать диалоговое окно редактирования задачи
+  function showDialogEditTask() {
+    dispatch(openDialog({ dialogName: 'dialogEditTask', data, columnName: currentColumnLocation }))
   }
 
   return (
@@ -104,16 +104,14 @@ function TaskBody({
       <Title>{data.nameTask}</Title>
 
       <Controls id='taskControls'>
-        <ControlDelete onClick={showDialogRemoveTask}>
-          <StyledIconDelete />
-        </ControlDelete>
-      </Controls>
+        <Control onClick={showDialogEditTask}>
+          <StyledIconEdit />
+        </Control>
 
-      <DialogRemoveTask
-        data={data}
-        handleRemoveTask={handleRemoveTask}
-        refDialog={refDialog}
-      />
+        <Control onClick={showDialogRemoveTask}>
+          <StyledIconDelete />
+        </Control>
+      </Controls>
 
       {data.description && (
         <ButtonShowDescription

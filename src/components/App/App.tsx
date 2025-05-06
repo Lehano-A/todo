@@ -3,7 +3,9 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { RootState } from '../../redux/store'
-import FormNewTask from '../FormNewTask/FormNewTask'
+import DialogAddNewTask from '../DialogAddNewTask/DialogAddNewTask'
+import DialogEditTask from '../DialogEditTask/DialogEditTask'
+import DialogRemoveTask from '../DialogRemoveTask/DialogRemoveTask'
 import Header from '../Header/Header'
 import Main from '../Main/Main'
 
@@ -15,21 +17,35 @@ const StyledApp = styled('div')`
 
 function App() {
   const refFormAddTask = useRef<HTMLDialogElement>(null)
+  const refDialogEditTask = useRef<HTMLDialogElement>(null)
+  const refDialogRemoveTask = useRef<HTMLDialogElement>(null)
 
-  const isActiveFormAddTask = useSelector((state: RootState) => state.formNewTask.isActive)
+  const { dialogAddNewTask, dialogEditTask, dialogRemoveTask } = useSelector((state: RootState) => state.dialogs)
 
   useEffect(() => {
-    if (isActiveFormAddTask && refFormAddTask.current) {
+    if (dialogAddNewTask.isActive && refFormAddTask.current) {
       refFormAddTask.current.showModal()
     }
-  }, [isActiveFormAddTask])
+
+    if (dialogEditTask.isActive && refDialogEditTask.current) {
+      refDialogEditTask.current.showModal()
+    }
+
+    if (dialogRemoveTask.isActive && refDialogRemoveTask.current) {
+      refDialogRemoveTask.current.showModal()
+    }
+  }, [dialogAddNewTask.isActive, dialogEditTask.isActive, dialogRemoveTask.isActive])
 
   return (
     <StyledApp>
       <Header />
       <Main />
 
-      {isActiveFormAddTask && <FormNewTask ref={refFormAddTask} />}
+      {dialogAddNewTask.isActive && <DialogAddNewTask ref={refFormAddTask} />}
+
+      {dialogEditTask.isActive && <DialogEditTask refDialog={refDialogEditTask} />}
+
+      {dialogRemoveTask.isActive && <DialogRemoveTask refDialog={refDialogRemoveTask} />}
     </StyledApp>
   )
 }
