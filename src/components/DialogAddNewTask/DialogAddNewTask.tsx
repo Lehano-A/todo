@@ -1,6 +1,5 @@
 import React, { forwardRef } from 'react'
 import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
 import uniqid from 'uniqid'
 
 import { closeDialog } from '../../redux/reducers/slices/dialogsSlice'
@@ -8,10 +7,6 @@ import { addNewTask } from '../../redux/reducers/slices/tasksSlice'
 import { TaskType } from '../Main/Task/task.type'
 import Dialog from '../common/Dialog/Dialog'
 import FormTask from '../common/FormTask/FormTask'
-
-const Title = styled('h2')`
-  margin-bottom: 25px;
-`
 
 const DialogAddNewTask = forwardRef(function (_, ref: any) {
   const dispatch = useDispatch()
@@ -40,9 +35,10 @@ const DialogAddNewTask = forwardRef(function (_, ref: any) {
       ref={ref}
       handleCloseDialog={handleCloseDialog}
     >
-      <Title>Создаём новую задачу</Title>
-
-      <FormTask handleSubmit={handleCreateNewTask} />
+      <FormTask
+        title='Создаём новую задачу'
+        handleSubmit={handleCreateNewTask}
+      />
     </Dialog>
   )
 })

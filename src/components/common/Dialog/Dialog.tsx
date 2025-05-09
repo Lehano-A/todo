@@ -9,8 +9,9 @@ const StyledDialog = styled('dialog')`
   padding: 30px;
   min-width: 400px;
   max-width: 600px;
+  overflow: visible;
 
-  :where(& input, & textarea, & label, & div) {
+  :where(& input, & textarea) {
     width: 100%;
   }
 `
@@ -51,7 +52,10 @@ const Dialog = forwardRef(function ({ children, handleCloseDialog }: React.Props
   }
 
   return (
-    <StyledDialog ref={ref}>
+    <StyledDialog
+      ref={ref}
+      id='dialog'
+    >
       <span
         autoFocus
         tabIndex={-1}

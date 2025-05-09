@@ -39,9 +39,10 @@ function DialogEditTask({ refDialog }: DialogEditTaskProps) {
       handleCloseDialog={handleCloseDialog}
     >
       <FormTask
+        title='Редактируем задачу'
+        nameButtonSubmit='Обновить'
         valuesForInputs={dialogEditTask.data}
         handleSubmit={handleEditSubmit}
-        nameButtonSubmit='Обновить'
       />
     </Dialog>
   )

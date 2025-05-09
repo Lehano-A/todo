@@ -1,3 +1,4 @@
+import { ConfigProvider } from 'antd'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
@@ -12,9 +13,12 @@ const root = createRoot(container)
 
 root.render(
   <Provider store={store}>
+    {/* <ConfigProvider theme={{ components: { */}
+    {/* DatePicker: {zIndexPopup: 111111111}}}}> */}
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <App />
     </ThemeProvider>
+    {/* </ConfigProvider> */}
   </Provider>
 )

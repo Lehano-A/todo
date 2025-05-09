@@ -1,15 +1,25 @@
+import { DatePicker } from 'antd'
+import dayjs, { Dayjs } from 'dayjs'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import getFormattedDate from '../../../utils/getFormattedDate'
 import { TaskType } from '../../Main/Task/task.type'
 
-const Label = styled('label')`
+const Title = styled('h2')`
+  font-size: 1.6rem;
+  margin-bottom: 25px;
+`
+
+const BoxLabelInput = styled('div')`
   display: flex;
   flex-direction: column;
-  &:not(:last-child) {
-    margin-bottom: 20px;
-  }
+  align-items: start;
+  margin-bottom: 20px;
+`
+
+const Label = styled('label')`
+  margin-bottom: 3px;
 `
 
 const NameTask = styled('input')`
@@ -29,7 +39,8 @@ const Description = styled('textarea')`
   }
 `
 
-const Deadline = styled('input')`
+const Deadline = styled(DatePicker)`
+  width: 100%;
   &:focus {
     ${({ theme }) => theme.focus.input};
   }
@@ -57,9 +68,10 @@ interface FormTaskProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>, inputsValues: TaskType) => void
   valuesForInputs?: TaskType
   nameButtonSubmit?: 'Создать' | 'Обновить'
+  title?: string
 }
 
-function FormTask({ handleSubmit, valuesForInputs, nameButtonSubmit = 'Создать' }: FormTaskProps) {
+function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'Создать' }: FormTaskProps) {
   const [inputsValues, setInputsValues] = useState<TaskType>(defaultFormValues)
   const [isDisabledSubmit, setIsDisabledSubmit] = useState(true)
 
@@ -96,6 +108,15 @@ function FormTask({ handleSubmit, valuesForInputs, nameButtonSubmit = 'Созд�
     }))
   }
 
+  function handleDatePick(date: unknown, dateString: string | string[]) {
+    if (!Array.isArray(dateString)) {
+      setInputsValues((prevState) => ({
+        ...prevState,
+        deadline: dateString,
+      }))
+    }
+  }
+
   // обработать сабмит формы
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -103,43 +124,56 @@ function FormTask({ handleSubmit, valuesForInputs, nameButtonSubmit = 'Созд�
     handleSubmit(e, inputsValues)
   }
 
+  // скрыть даты перед сегодняшним днём
+  function disableDateBeforeToday(current: Dayjs): boolean {
+    return current && current < dayjs().endOf('day')
+  }
+
   return (
-    <form onSubmit={handleFormSubmit}>
-      <Label>
-        Название задачи
-        <NameTask
-          required
-          maxLength={300}
-          name='nameTask'
-          placeholder='Испечь пирожки...'
-          value={inputsValues.nameTask}
-          onChange={handleInputValue}
-        />
-      </Label>
+    <>
+      {title && <Title>{title}</Title>}
 
-      <Label>
-        Описание
-        <Description
-          rows={9}
-          name='description'
-          placeholder='3 стакана муки, 1 стакан молока, дрожжи, кубик сливочного масла...'
-          value={inputsValues.description}
-          onChange={handleInputValue}
-        />
-      </Label>
+      <form onSubmit={handleFormSubmit}>
+        <BoxLabelInput>
+          <Label htmlFor='taskNameInput'>Название задачи </Label>
 
-      <Label>
-        Крайний срок выполнения
-        <Deadline
-          name='deadline'
-          type='date'
-          defaultValue={valuesForInputs?.deadline}
-          onChange={handleInputValue}
-        />
-      </Label>
+          <NameTask
+            id='taskNameInput'
+            required
+            maxLength={300}
+            name='nameTask'
+            placeholder='Испечь пирожки...'
+            value={inputsValues.nameTask}
+            onChange={handleInputValue}
+          />
+        </BoxLabelInput>
+        <BoxLabelInput>
+          <Label htmlFor='taskDescriptionTextArea'>Описание</Label>
+          <Description
+            id='taskDescriptionTextArea'
+            rows={9}
+            name='description'
+            placeholder='3 стакана муки, 1 стакан молока, дрожжи, кубик сливочного масла...'
+            value={inputsValues.description}
+            onChange={handleInputValue}
+          />
+        </BoxLabelInput>
 
-      <ButtonSubmit disabled={isDisabledSubmit}>{nameButtonSubmit}</ButtonSubmit>
-    </form>
+        <BoxLabelInput>
+          <Label htmlFor='deadlineDatePicker'> Крайний срок выполнения </Label>
+          <Deadline
+            id='deadlineDatePicker'
+            placeholder='дд.мм.гггг'
+            format={{ format: 'DD.MM.YYYY' }}
+            disabledDate={disableDateBeforeToday}
+            getPopupContainer={() => document.getElementById('dialog') || document.body}
+            onChange={handleDatePick}
+            value={inputsValues.deadline ? dayjs(inputsValues.deadline, 'DD.MM.YYYY') : inputsValues.deadline}
+          />
+        </BoxLabelInput>
+        <ButtonSubmit disabled={isDisabledSubmit}>{nameButtonSubmit}</ButtonSubmit>
+      </form>
+    </>
   )
 }
 
