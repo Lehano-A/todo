@@ -11,7 +11,7 @@ const StyledDialog = styled('dialog')`
   max-width: 600px;
   overflow: visible;
 
-  :where(& input, & textarea) {
+  :where(& input, & textarea, & .ant-picker) {
     width: 100%;
   }
 `
@@ -32,7 +32,7 @@ const ButtonClose = styled('button')`
   border-radius: 50%;
 
   &:focus {
-    ${({ theme }) => theme.focus.input}
+    ${({ theme }) => theme.palette.focus.input};
     border-radius: 50%;
   }
 `

@@ -3,12 +3,24 @@ import dayjs, { Dayjs } from 'dayjs'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
+import { ReactComponent as IconCalendar } from '../../../images/icons/calendar.svg'
+import { ReactComponent as IconClear } from '../../../images/icons/clear.svg'
 import getFormattedDate from '../../../utils/getFormattedDate'
 import { TaskType } from '../../Main/Task/task.type'
 
 const Title = styled('h2')`
   font-size: 1.6rem;
   margin-bottom: 25px;
+`
+
+const StyledIconCalendar = styled(IconCalendar)`
+  width: 22px;
+  height: 22px;
+`
+
+const StyledIconClear = styled(IconClear)`
+  width: 22px;
+  height: 22px;
 `
 
 const BoxLabelInput = styled('div')`
@@ -24,7 +36,15 @@ const Label = styled('label')`
 
 const NameTask = styled('input')`
   &:focus {
-    ${({ theme }) => theme.focus.input};
+    ${({ theme }) => theme.palette.focus.input};
+  }
+`
+
+const Date = styled(DatePicker)`
+  transition: none;
+
+  &:focus-within, &:active {
+    ${({ theme }) => theme.palette.focus.input}};
   }
 `
 
@@ -35,14 +55,7 @@ const Description = styled('textarea')`
   margin-bottom: -4px;
 
   &:focus {
-    ${({ theme }) => theme.focus.input};
-  }
-`
-
-const Deadline = styled(DatePicker)`
-  width: 100%;
-  &:focus {
-    ${({ theme }) => theme.focus.input};
+    ${({ theme }) => theme.palette.focus.input};
   }
 `
 
@@ -161,7 +174,8 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
 
         <BoxLabelInput>
           <Label htmlFor='deadlineDatePicker'> Крайний срок выполнения </Label>
-          <Deadline
+
+          <Date
             id='deadlineDatePicker'
             placeholder='дд.мм.гггг'
             format={{ format: 'DD.MM.YYYY' }}
@@ -169,6 +183,8 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
             getPopupContainer={() => document.getElementById('dialog') || document.body}
             onChange={handleDatePick}
             value={inputsValues.deadline ? dayjs(inputsValues.deadline, 'DD.MM.YYYY') : inputsValues.deadline}
+            clearIcon={<StyledIconClear />}
+            suffixIcon={<StyledIconCalendar />}
           />
         </BoxLabelInput>
         <ButtonSubmit disabled={isDisabledSubmit}>{nameButtonSubmit}</ButtonSubmit>

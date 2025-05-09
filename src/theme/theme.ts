@@ -7,9 +7,11 @@ const palette = {
   accent: { main: '' },
   error: { dark: '#ce001a', main: '#ffadb7' },
   bg: { main: '' },
+
   gradients: {
     main: 'linear-gradient(to right, #5433ff, #20bdff, #a5fecb)',
   },
+
   grey: {
     50: '#fafafa',
     100: '#f5f5f5',
@@ -17,10 +19,21 @@ const palette = {
     300: '#e0e0e0',
     900: '#212121',
   },
+
   taskColumns: {
     todo: '#f5f5f5',
     inProcess: 'rgba(250, 231, 179, 0.27)',
     done: 'rgba(186, 245, 209, 0.27);',
+  },
+
+  focus: {
+    get input() {
+      return `
+      background: linear-gradient(#fff 0 0) padding-box, ${palette.gradients.main} border-box;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      `
+    },
   },
 }
 
@@ -35,8 +48,8 @@ const GlobalStyle = createGlobalStyle`
   :root {
     font-size: 0.625rem;
     font-family: Rubik,  Roboto, Arial,
-     sans-serif;
-     font-weight: 400;
+    sans-serif;
+    font-weight: 400;
   }
 
   body {
@@ -50,14 +63,14 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 
-  input, textarea {
+  input, textarea, .ant-picker {
     border-radius: 4px;
     border: 2px solid #d0d0d0;
     padding-left: 15px;
     padding-right: 15px;
   }
 
-  input {
+  input, .ant-picker {
     height: 40px;
   }
 
@@ -66,7 +79,7 @@ const GlobalStyle = createGlobalStyle`
     padding-bottom: 5px;
   }
 
-  input:focus, textarea:focus {
+  input:focus, textarea:focus, button:focus {
     outline: none;
   }
 
@@ -77,13 +90,6 @@ const GlobalStyle = createGlobalStyle`
 
 const theme = {
   palette,
-  focus: {
-    input: `
-    background: linear-gradient(#fff 0 0) padding-box, ${palette.gradients.main} border-box;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    `,
-  },
 }
 
 export default theme
