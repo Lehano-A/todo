@@ -50,7 +50,8 @@ const ButtonAddTask = styled('button')`
   margin: 90px 10px 0 0;
   transition: background-color 0.2s ease;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: ${({ theme }) => theme.palette.primary.main};
 
     & svg {
