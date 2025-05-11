@@ -1,9 +1,11 @@
 import { DraggableProvided } from '@hello-pangea/dnd'
-import React, { TransitionEvent, useEffect, useRef, useState } from 'react'
+import { pluralize } from 'numeralize-ru'
+import React, { TransitionEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
+import { calculateRestOfDaysBeforeDeadline } from '../../../utils/calculateRestOfDaysBeforeDeadline'
 import increment from '../../../utils/increment'
 import { ColumnName } from '../Columns/columns.type'
 import TaskBody from './TaskBody/TaskBody'
@@ -46,15 +48,25 @@ const StyledTask = styled('div')<StyledTaskProps>`
   }
 `
 
-const TextDeadline = styled('time')`
+const DeadlineBox = styled('div')`
   position: absolute;
-  padding: 5px;
   top: 0px;
+  display: flex;
+  gap: 3px;
+`
+
+const TextDeadline = styled('time')`
+  padding: 5px;
   background: ${({ theme }) => theme.palette.error.dark};
   color: #fff;
   font-size: 1.3rem;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+`
+
+const RestOfDays = styled('time')`
+  font-size: 1.2rem;
+  color: ${({ theme }) => theme.palette.error.dark};
 `
 
 export interface TaskProps {
@@ -83,6 +95,14 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
     default: { height: null }, // параметры без description
     withDescription: { height: null }, // параметры с description
   })
+
+  // остаток дней до дедлайна
+  const restOfDaysBeforeDeadline = useMemo(() => {
+    const restOfDays = calculateRestOfDaysBeforeDeadline(data.deadline)
+    const caseText = pluralize(Number(restOfDays), 'день', 'дня', 'дней')
+
+    return `${restOfDays} ${caseText}`
+  }, [data.deadline])
 
   useEffect(() => {
     // расчёт высоты параграфа
@@ -138,7 +158,12 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
       ref={provided?.innerRef}
       $hasDeadline={Boolean(data.deadline)}
     >
-      {data.deadline && <TextDeadline>выполнить до {data.deadline}</TextDeadline>}
+      {data.deadline && (
+        <DeadlineBox>
+          <TextDeadline>выполнить до {data.deadline}</TextDeadline>
+          <RestOfDays>{restOfDaysBeforeDeadline}</RestOfDays>
+        </DeadlineBox>
+      )}
 
       <StyledTask
         $hasDeadline={Boolean(data.deadline)}

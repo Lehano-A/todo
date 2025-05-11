@@ -14,6 +14,7 @@
     "antd": "^5.25.0",
     "cra-template-ts-react-l": "1.4.0",
     "dayjs": "^1.11.13",
+    "numeralize-ru": "^2.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
