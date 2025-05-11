@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react'
 import styled from 'styled-components'
 
 import { ReactComponent as IconClose } from '../../../images/icons/close.svg'
+import { PrimaryButton } from '../../../styled/buttons'
 
 const StyledDialog = styled('dialog')`
   border: none;
@@ -20,7 +21,7 @@ const StyledIconClose = styled(IconClose)`
   fill: ${({ theme }) => theme.palette.primary.main};
 `
 
-const ButtonClose = styled('button')`
+const ButtonClose = styled(PrimaryButton)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,11 +31,6 @@ const ButtonClose = styled('button')`
   width: 30px;
   height: 30px;
   border-radius: 50%;
-
-  &:focus {
-    ${({ theme }) => theme.palette.focus.input};
-    border-radius: 50%;
-  }
 `
 
 interface DialogProps {

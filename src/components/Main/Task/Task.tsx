@@ -2,6 +2,8 @@ import { DraggableProvided } from '@hello-pangea/dnd'
 import React, { TransitionEvent, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
+import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
 import increment from '../../../utils/increment'
 import { ColumnName } from '../Columns/columns.type'
 import TaskBody from './TaskBody/TaskBody'
@@ -11,6 +13,14 @@ const CommonWrapper = styled('div')<{ $hasDeadline: boolean }>`
   position: relative;
   padding-top: ${({ $hasDeadline }) => ($hasDeadline ? '25px' : 0)};
   margin: 8px 0;
+
+  &:focus-visible {
+    ${simpleFocusOutlineStyle}
+  }
+
+  &:focus-within {
+    ${visibleTaskControlsStyle}
+  }
 `
 
 const StyledTask = styled('div')<StyledTaskProps>`
@@ -18,7 +28,7 @@ const StyledTask = styled('div')<StyledTaskProps>`
   width: 300px;
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: #fff;
   padding: 20px 20px 50px 20px;
   border-radius: ${({ $hasDeadline }) => ($hasDeadline ? 0 : '12px')} 12px 12px 12px;
   transition: height 0.6s ease;
@@ -30,11 +40,9 @@ const StyledTask = styled('div')<StyledTaskProps>`
       ? $styleParamsParent?.withDescription.height
       : $styleParamsParent?.default.height};
 
-  &:hover {
-    #taskControls {
-      visibility: visible;
-      opacity: 1;
-    }
+  &:hover,
+  &:focus {
+    ${visibleTaskControlsStyle}
   }
 `
 

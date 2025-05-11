@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import { ReactComponent as IconCalendar } from '../../../images/icons/calendar.svg'
 import { ReactComponent as IconClear } from '../../../images/icons/clear.svg'
-import getFormattedDate from '../../../utils/getFormattedDate'
 import { TaskType } from '../../Main/Task/task.type'
 
 const Title = styled('h2')`
@@ -16,11 +15,13 @@ const Title = styled('h2')`
 const StyledIconCalendar = styled(IconCalendar)`
   width: 22px;
   height: 22px;
+  fill: ${({ theme }) => theme.palette.grey[250]};
 `
 
 const StyledIconClear = styled(IconClear)`
   width: 22px;
   height: 22px;
+  fill: ${({ theme }) => theme.palette.grey[250]};
 `
 
 const BoxLabelInput = styled('div')`
@@ -104,7 +105,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
     const preset = JSON.stringify(valuesForInputs)
     const defaults = JSON.stringify(defaultFormValues)
 
-    if (current === preset || current === defaults) {
+    if (inputsValues.nameTask === '' || current === preset || current === defaults) {
       setIsDisabledSubmit(true)
     } else {
       setIsDisabledSubmit(false)
@@ -117,10 +118,11 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
 
     setInputsValues((prevState) => ({
       ...prevState,
-      [name]: `${name === 'deadline' ? getFormattedDate(value) : value}`,
+      [name]: value,
     }))
   }
 
+  // обработать выбор даты
   function handleDatePick(date: unknown, dateString: string | string[]) {
     if (!Array.isArray(dateString)) {
       setInputsValues((prevState) => ({
@@ -130,16 +132,16 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
     }
   }
 
+  // скрыть даты перед сегодняшним днём
+  function disableDateBeforeToday(current: Dayjs): boolean {
+    return current && current < dayjs().endOf('day')
+  }
+
   // обработать сабмит формы
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     handleSubmit(e, inputsValues)
-  }
-
-  // скрыть даты перед сегодняшним днём
-  function disableDateBeforeToday(current: Dayjs): boolean {
-    return current && current < dayjs().endOf('day')
   }
 
   return (
@@ -149,7 +151,6 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
       <form onSubmit={handleFormSubmit}>
         <BoxLabelInput>
           <Label htmlFor='taskNameInput'>Название задачи </Label>
-
           <NameTask
             id='taskNameInput'
             required
@@ -160,6 +161,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
             onChange={handleInputValue}
           />
         </BoxLabelInput>
+
         <BoxLabelInput>
           <Label htmlFor='taskDescriptionTextArea'>Описание</Label>
           <Description
@@ -174,7 +176,6 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
 
         <BoxLabelInput>
           <Label htmlFor='deadlineDatePicker'> Крайний срок выполнения </Label>
-
           <Date
             id='deadlineDatePicker'
             placeholder='дд.мм.гггг'
@@ -183,7 +184,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
             getPopupContainer={() => document.getElementById('dialog') || document.body}
             onChange={handleDatePick}
             value={inputsValues.deadline ? dayjs(inputsValues.deadline, 'DD.MM.YYYY') : inputsValues.deadline}
-            clearIcon={<StyledIconClear />}
+            allowClear={{ clearIcon: <StyledIconClear /> }}
             suffixIcon={<StyledIconCalendar />}
           />
         </BoxLabelInput>

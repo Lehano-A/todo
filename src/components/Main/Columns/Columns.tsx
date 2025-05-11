@@ -11,6 +11,7 @@ import { openDialog } from '../../../redux/reducers/slices/dialogsSlice'
 import { disableDrop, enableDrop } from '../../../redux/reducers/slices/dndSlice'
 import { transferTask } from '../../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../../redux/store'
+import { PrimaryButton } from '../../../styled/buttons'
 import Column from '../../../styled/column'
 import Task from '../Task/Task'
 import { TaskType, TasksType } from '../Task/task.type'
@@ -39,7 +40,7 @@ const StyledAddIcon = styled(AddIcon)`
   height: 100%;
 `
 
-const ButtonAddTask = styled('button')`
+const ButtonAddTask = styled(PrimaryButton)`
   position: sticky;
   top: 50px;
   width: 40px;
@@ -48,16 +49,6 @@ const ButtonAddTask = styled('button')`
   background-color: white;
   border-radius: 50%;
   margin: 90px 10px 0 0;
-  transition: background-color 0.2s ease;
-
-  &:hover,
-  &:focus {
-    background-color: ${({ theme }) => theme.palette.primary.main};
-
-    & svg {
-      fill: white;
-    }
-  }
 `
 
 const columns: Columns[] = [

@@ -6,6 +6,7 @@ import { ReactComponent as IconArrowDown } from '../../../../images/icons/arrow-
 import { ReactComponent as IconDelete } from '../../../../images/icons/delete.svg'
 import { ReactComponent as IconEdit } from '../../../../images/icons/edit.svg'
 import { openDialog } from '../../../../redux/reducers/slices/dialogsSlice'
+import { TaskButton } from '../../../../styled/buttons'
 import { StyleParamsParentType, TaskProps } from '../Task'
 import { StyledTaskProps, TaskType } from '../task.type'
 import { translateBackward, translateForward } from './animation/translate'
@@ -25,30 +26,26 @@ const Controls = styled('div')`
   top: 5px;
   right: 8px;
   display: flex;
-  gap: 5px;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.2s ease;
 `
 
-const StyledControl = styled('button')`
+const Control = styled(TaskButton)`
   width: 20px;
   height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
-const Control = styled(StyledControl)``
-
-const StyledIconEdit = styled(IconEdit)``
-
-const StyledIconDelete = styled(IconDelete)``
-
-const ButtonShowDescription = styled('button')`
+const ButtonShowDescription = styled(TaskButton)`
   position: absolute;
   left: 50%;
-  bottom: 0px;
+  bottom: 2px; // 2px - чтобы была видна нижняя часть фокуса
   transform: translateX(-50%);
   width: 50px;
-  height: 30px;
+  height: 25px;
 `
 
 const TextDescription = styled('p')<StyledTaskProps>`
@@ -105,11 +102,11 @@ function TaskBody({
 
       <Controls id='taskControls'>
         <Control onClick={showDialogEditTask}>
-          <StyledIconEdit />
+          <IconEdit />
         </Control>
 
         <Control onClick={showDialogRemoveTask}>
-          <StyledIconDelete />
+          <IconDelete />
         </Control>
       </Controls>
 

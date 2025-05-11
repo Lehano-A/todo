@@ -16,7 +16,13 @@ const palette = {
     50: '#fafafa',
     100: '#f5f5f5',
     200: '#eeeeee',
+    250: '#d0d0d0',
     300: '#e0e0e0',
+    400: '#bdbdbd',
+    500: '#9e9e9e',
+    600: '#757575',
+    700: '#616161',
+    800: '#424242',
     900: '#212121',
   },
 
@@ -65,7 +71,7 @@ const GlobalStyle = createGlobalStyle`
 
   input, textarea, .ant-picker {
     border-radius: 4px;
-    border: 2px solid #d0d0d0;
+    border: 2px solid ${palette.grey[250]};
     padding-left: 15px;
     padding-right: 15px;
   }
