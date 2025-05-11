@@ -6,14 +6,14 @@ import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
 import increment from '../../../utils/increment'
 import TaskBody from './TaskBody/TaskBody'
-import { StyleParamsParentType, StyleTaskElements, StyledTaskProps, TaskProps } from './task.types'
+import { DeadlineProps, StyleParamsParentType, StyledTaskProps, TaskProps } from './task.types'
 import { calculateRestOfDaysBeforeDeadline } from './utils/calculateRestOfDaysBeforeDeadline'
 import { getColorsTaskElements } from './utils/getColorsTaskElements'
 
-const CommonWrapper = styled('div')<{ $hasDeadline: boolean }>`
+const CommonWrapper = styled('div')<{ $hasDeadline: boolean; $isTaskDone: StyledTaskProps['$isTaskDone'] }>`
   position: relative;
-  padding-top: ${({ $hasDeadline }) => ($hasDeadline ? '25px' : 0)};
   margin: 8px 0;
+  padding-top: ${({ $isTaskDone, $hasDeadline }) => ($isTaskDone || $hasDeadline ? '25px' : 0)};
 
   &:focus-visible {
     ${simpleFocusOutlineStyle}
@@ -31,17 +31,16 @@ const StyledTask = styled('div')<StyledTaskProps>`
   flex-direction: column;
   background-color: #fff;
   padding: 20px 20px 50px 20px;
-  border-radius: ${({ $hasDeadline }) => ($hasDeadline ? 0 : '12px')} 12px 12px 12px;
   transition: height 0.6s ease;
   overflow: hidden;
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.1);
   word-break: break-word;
+  background-color: ${({ $styleTaskElements }) => $styleTaskElements.bg};
+  border-radius: ${({ $isTaskDone, $hasDeadline }) => ($isTaskDone || $hasDeadline ? 0 : '12px')} 12px 12px 12px;
   height: ${({ $wasClickedButtonDescription, $styleParamsParent }) =>
     $wasClickedButtonDescription && $styleParamsParent?.withDescription.height
       ? $styleParamsParent?.withDescription.height
       : $styleParamsParent?.default.height};
-
-  background-color: ${({ $styleTaskElements }) => $styleTaskElements.bg};
 
   &:hover,
   &:focus {
@@ -56,13 +55,23 @@ const DeadlineBox = styled('div')`
   gap: 3px;
 `
 
-const TextDeadline = styled('time')<{ $styleTaskElements: StyleTaskElements }>`
+const Deadline = styled('time')<DeadlineProps>`
   padding: 5px;
-  background: ${({ $styleTaskElements }) => $styleTaskElements.deadline.bg};
   color: #fff;
   font-size: 1.3rem;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  background: ${({ $styleTaskElements, $isTaskDone, $isExpired }) => {
+    if ($isExpired) {
+      return $styleTaskElements.deadline.bg.main
+    }
+
+    if ($isTaskDone) {
+      return $styleTaskElements.deadline.bg.done
+    }
+
+    return $styleTaskElements.deadline.bg.main
+  }};
 `
 
 const RestOfDays = styled('time')`
@@ -76,6 +85,8 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const refTask = useRef<HTMLDivElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
 
+  const isTaskDone = currentColumnLocation === 'done'
+
   const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
   const [isDisabledButtonShowDescription, setIsDisabledButtonShowDescription] = useState(false)
@@ -85,6 +96,7 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
   })
 
   const restOfDays = useMemo(() => calculateRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
+  const isExpired = Boolean(restOfDays && restOfDays <= 0)
 
   // остаток дней до дедлайна
   const restOfDaysBeforeDeadline = useMemo(() => {
@@ -119,7 +131,7 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
         setStyleParamsParent((prevState) => ({ ...prevState, default: { height } }))
       }
     }
-  }, [wasClickedButtonDescription])
+  }, [wasClickedButtonDescription, data.nameTask, data.description])
 
   // показать описание задачи
   function handleShowDescription() {
@@ -142,23 +154,47 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
     }
   }
 
+  const textDeadline = useMemo(() => {
+    // если непросрочено и задача находится не в колонке 'Done'
+    if (!isExpired && !isTaskDone) {
+      return `выполнить до ${data.deadline}`
+    }
+
+    // если просрочено
+    if (isExpired) {
+      return 'просрочено'
+    }
+
+    // если в колонке 'Done'
+    if (isTaskDone) {
+      return `выполнено`
+    }
+  }, [currentColumnLocation, data.deadline])
+
   return (
     <CommonWrapper
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
       ref={provided?.innerRef}
       $hasDeadline={Boolean(data.deadline)}
+      $isTaskDone={isTaskDone}
     >
-      {data.deadline && (
+      {(data.deadline || isTaskDone) && (
         <DeadlineBox>
-          <TextDeadline $styleTaskElements={styleTaskElements}>
-            {restOfDays && restOfDays > 0 ? `выполнить до ${data.deadline}` : 'просрочено'}
-          </TextDeadline>
-          <RestOfDays>{restOfDaysBeforeDeadline}</RestOfDays>
+          <Deadline
+            $styleTaskElements={styleTaskElements}
+            $isTaskDone={isTaskDone}
+            $isExpired={isExpired}
+          >
+            {textDeadline}
+          </Deadline>
+
+          {!isTaskDone && <RestOfDays>{restOfDaysBeforeDeadline}</RestOfDays>}
         </DeadlineBox>
       )}
 
       <StyledTask
+        $isTaskDone={isTaskDone}
         $hasDeadline={Boolean(data.deadline)}
         $styleParamsParent={styleParamsParent}
         $wasClickedButtonDescription={wasClickedButtonDescription}

@@ -12,6 +12,10 @@ const palette = {
     main: 'linear-gradient(to right, #5433ff, #20bdff, #a5fecb)',
   },
 
+  green: {
+    500: '#71DB9A',
+  },
+
   red: {
     50: '#ffebee',
     75: '#ffe1e7',

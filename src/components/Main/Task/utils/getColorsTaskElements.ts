@@ -5,12 +5,13 @@ import { RestOfDays } from './calculateRestOfDaysBeforeDeadline'
 // получить цвета элементов задачи
 export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDays) {
   const white = '#fff'
+  const green = theme.palette.green
   const red = theme.palette.red
   const grey = theme.palette.grey
 
   const defaultStyle = {
     bg: white,
-    deadline: { bg: red[900] },
+    deadline: { bg: { main: red[900], done: green[500] } },
     control: { fill: grey[500], hover: grey[300] },
   }
 
@@ -23,8 +24,8 @@ export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDay
   if (restOfDays <= 0) {
     return {
       bg: grey[300],
-      deadline: { bg: grey[700] },
-      control: { fill: grey[500], hover: grey[700] },
+      deadline: { bg: { ...defaultStyle.deadline.bg, main: grey[700] } },
+      control: { ...defaultStyle.control, hover: grey[700] },
     }
   }
 
@@ -32,7 +33,7 @@ export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDay
   if (restOfDays >= 5 && restOfDays <= 7) {
     return {
       bg: red[100],
-      deadline: { bg: red[900] },
+      deadline: defaultStyle.deadline,
       control: { fill: red[300], hover: red[950] },
     }
   }
@@ -41,7 +42,7 @@ export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDay
   if (restOfDays >= 3 && restOfDays <= 5) {
     return {
       bg: red[300],
-      deadline: { bg: red[900] },
+      deadline: defaultStyle.deadline,
       control: { fill: red[900], hover: red[150] },
     }
   }
@@ -50,7 +51,7 @@ export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDay
   if (restOfDays <= 3 && restOfDays >= 1) {
     return {
       bg: red[900],
-      deadline: { bg: red[900] },
+      deadline: defaultStyle.deadline,
       control: { fill: red[200], hover: red[75] },
     }
   }

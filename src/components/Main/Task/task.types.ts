@@ -32,11 +32,18 @@ export interface StyleParamsParentType {
 
 export interface StyledTaskProps {
   $styleTaskElements: TaskControlProps['$styleTaskElements']
+  $isTaskDone: boolean
   $hasDeadline?: boolean
   $styleParamsParent: StyleParamsParentType
   $isDisabledButtonShowDescription?: boolean
   $isActiveDescription?: boolean
   $wasClickedButtonDescription?: boolean
+}
+
+export interface DeadlineProps {
+  $isTaskDone: StyledTaskProps['$isTaskDone']
+  $isExpired: boolean
+  $styleTaskElements: StyleTaskElements
 }
 
 export interface TextDescriptionProps {
@@ -46,7 +53,7 @@ export interface TextDescriptionProps {
 
 export interface StyleTaskElements {
   bg: string
-  deadline: { bg: string }
+  deadline: { bg: { main: string; done: string } }
   control: { fill: string; hover: string }
 }
 
