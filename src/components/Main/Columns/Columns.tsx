@@ -14,8 +14,8 @@ import { RootState } from '../../../redux/store'
 import { PrimaryButton } from '../../../styled/buttons'
 import Column from '../../../styled/column'
 import Task from '../Task/Task'
-import { TaskType, TasksType } from '../Task/task.type'
-import { Columns, StyledColumnProps } from './columns.type'
+import { TaskType, TasksType } from '../Task/task.types'
+import { Columns, StyledColumnProps } from './columns.types'
 
 const BoxForStickyAddButton = styled('div')`
   position: relative;

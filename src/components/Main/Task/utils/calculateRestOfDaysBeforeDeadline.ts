@@ -1,5 +1,7 @@
+export type RestOfDays = number | undefined
+
 // рассчитать остаток дней до дедлайна выполнения задачи
-export function calculateRestOfDaysBeforeDeadline(deadline: string) {
+export function calculateRestOfDaysBeforeDeadline(deadline: string): RestOfDays {
   if (deadline === '') {
     return
   }

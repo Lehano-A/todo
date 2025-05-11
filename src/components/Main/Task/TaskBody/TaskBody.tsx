@@ -6,9 +6,9 @@ import { ReactComponent as IconArrowDown } from '../../../../images/icons/arrow-
 import { ReactComponent as IconDelete } from '../../../../images/icons/delete.svg'
 import { ReactComponent as IconEdit } from '../../../../images/icons/edit.svg'
 import { openDialog } from '../../../../redux/reducers/slices/dialogsSlice'
-import { TaskButton } from '../../../../styled/buttons'
-import { StyleParamsParentType, TaskProps } from '../Task'
-import { StyledTaskProps, TaskType } from '../task.type'
+import { TaskControl } from '../../../../styled/buttons'
+import { TaskProps } from '../task.types'
+import { StyleTaskElements, TaskType, TextDescriptionProps } from '../task.types'
 import { translateBackward, translateForward } from './animation/translate'
 
 const StyledIconArrowDown = styled(IconArrowDown)`
@@ -31,7 +31,7 @@ const Controls = styled('div')`
   transition: opacity 0.2s ease;
 `
 
-const Control = styled(TaskButton)`
+const Control = styled(TaskControl)`
   width: 20px;
   height: 20px;
   display: flex;
@@ -39,7 +39,7 @@ const Control = styled(TaskButton)`
   align-items: center;
 `
 
-const ButtonShowDescription = styled(TaskButton)`
+const ButtonShowDescription = styled(TaskControl)`
   position: absolute;
   left: 50%;
   bottom: 2px; // 2px - чтобы была видна нижняя часть фокуса
@@ -48,7 +48,7 @@ const ButtonShowDescription = styled(TaskButton)`
   height: 25px;
 `
 
-const TextDescription = styled('p')<StyledTaskProps>`
+const TextDescription = styled('p')<TextDescriptionProps>`
   font-size: 1.4rem;
   width: 100%;
   margin: 25px 0 0;
@@ -65,24 +65,24 @@ const TextDescription = styled('p')<StyledTaskProps>`
 
 interface TaskBodyProps {
   data: TaskType
-  styleParamsParent: StyleParamsParentType
   refTextDescription: React.RefObject<HTMLDivElement>
   isActiveDescription: boolean
   isDisabledButtonShowDescription: boolean
   wasClickedButtonDescription: boolean
   currentColumnLocation: TaskProps['currentColumnLocation']
+  styleTaskElements: StyleTaskElements
   handleShowDescription: () => void
 }
 
 function TaskBody({
   data,
-  styleParamsParent,
   refTextDescription,
   isActiveDescription,
   isDisabledButtonShowDescription,
   wasClickedButtonDescription,
   handleShowDescription,
   currentColumnLocation,
+  styleTaskElements,
 }: TaskBodyProps) {
   const dispatch = useDispatch()
 
@@ -101,17 +101,24 @@ function TaskBody({
       <Title>{data.nameTask}</Title>
 
       <Controls id='taskControls'>
-        <Control onClick={showDialogEditTask}>
+        <Control
+          onClick={showDialogEditTask}
+          $styleTaskElements={styleTaskElements}
+        >
           <IconEdit />
         </Control>
 
-        <Control onClick={showDialogRemoveTask}>
+        <Control
+          onClick={showDialogRemoveTask}
+          $styleTaskElements={styleTaskElements} // прокидывается внутрь TaskControl
+        >
           <IconDelete />
         </Control>
       </Controls>
 
       {data.description && (
         <ButtonShowDescription
+          $styleTaskElements={styleTaskElements} // прокидывается внутрь TaskControl
           disabled={isDisabledButtonShowDescription}
           onClick={handleShowDescription}
         >
@@ -121,7 +128,6 @@ function TaskBody({
 
       <TextDescription
         $isActiveDescription={isActiveDescription}
-        $styleParamsParent={styleParamsParent}
         $wasClickedButtonDescription={wasClickedButtonDescription}
         ref={refTextDescription}
       >

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeDialog } from '../../redux/reducers/slices/dialogsSlice'
 import { editTask } from '../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../redux/store'
-import { TaskType } from '../Main/Task/task.type'
+import { TaskType } from '../Main/Task/task.types'
 import Dialog from '../common/Dialog/Dialog'
 import FormTask from '../common/FormTask/FormTask'
 

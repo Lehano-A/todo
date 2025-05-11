@@ -1,5 +1,5 @@
-import { ColumnName } from '../../../components/Main/Columns/columns.type'
-import { TaskType } from '../../../components/Main/Task/task.type'
+import { ColumnName } from '../../../components/Main/Columns/columns.types'
+import { TaskType } from '../../../components/Main/Task/task.types'
 
 export type DialogName = 'dialogAddNewTask' | 'dialogEditTask' | 'dialogRemoveTask'
 

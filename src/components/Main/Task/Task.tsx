@@ -1,15 +1,14 @@
-import { DraggableProvided } from '@hello-pangea/dnd'
 import { pluralize } from 'numeralize-ru'
 import React, { TransitionEvent, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 
 import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
-import { calculateRestOfDaysBeforeDeadline } from '../../../utils/calculateRestOfDaysBeforeDeadline'
 import increment from '../../../utils/increment'
-import { ColumnName } from '../Columns/columns.type'
 import TaskBody from './TaskBody/TaskBody'
-import { StyledTaskProps, TaskType } from './task.type'
+import { StyleParamsParentType, StyleTaskElements, StyledTaskProps, TaskProps } from './task.types'
+import { calculateRestOfDaysBeforeDeadline } from './utils/calculateRestOfDaysBeforeDeadline'
+import { getColorsTaskElements } from './utils/getColorsTaskElements'
 
 const CommonWrapper = styled('div')<{ $hasDeadline: boolean }>`
   position: relative;
@@ -42,6 +41,8 @@ const StyledTask = styled('div')<StyledTaskProps>`
       ? $styleParamsParent?.withDescription.height
       : $styleParamsParent?.default.height};
 
+  background-color: ${({ $styleTaskElements }) => $styleTaskElements.bg};
+
   &:hover,
   &:focus {
     ${visibleTaskControlsStyle}
@@ -50,14 +51,14 @@ const StyledTask = styled('div')<StyledTaskProps>`
 
 const DeadlineBox = styled('div')`
   position: absolute;
-  top: 0px;
+  top: 1px; /* 1px, а не 0 - т.к. при открытии TextDescription, начинает мерцать нижняя граница во время анимации */
   display: flex;
   gap: 3px;
 `
 
-const TextDeadline = styled('time')`
+const TextDeadline = styled('time')<{ $styleTaskElements: StyleTaskElements }>`
   padding: 5px;
-  background: ${({ theme }) => theme.palette.error.dark};
+  background: ${({ $styleTaskElements }) => $styleTaskElements.deadline.bg};
   color: #fff;
   font-size: 1.3rem;
   border-top-left-radius: 12px;
@@ -69,22 +70,9 @@ const RestOfDays = styled('time')`
   color: ${({ theme }) => theme.palette.error.dark};
 `
 
-export interface TaskProps {
-  data: TaskType
-  currentColumnLocation: ColumnName
-  provided?: DraggableProvided
-}
-
-export interface StyleParamsParentType {
-  default: {
-    height: string | null
-  }
-  withDescription: {
-    height: string | null
-  }
-}
-
 function Task({ data, currentColumnLocation, provided }: TaskProps) {
+  const theme = useTheme()
+
   const refTask = useRef<HTMLDivElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
 
@@ -96,13 +84,16 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
     withDescription: { height: null }, // параметры с description
   })
 
+  const restOfDays = useMemo(() => calculateRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
+
   // остаток дней до дедлайна
   const restOfDaysBeforeDeadline = useMemo(() => {
-    const restOfDays = calculateRestOfDaysBeforeDeadline(data.deadline)
     const caseText = pluralize(Number(restOfDays), 'день', 'дня', 'дней')
 
     return `${restOfDays} ${caseText}`
-  }, [data.deadline])
+  }, [restOfDays])
+
+  const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays), [restOfDays])
 
   useEffect(() => {
     // расчёт высоты параграфа
@@ -160,7 +151,9 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
     >
       {data.deadline && (
         <DeadlineBox>
-          <TextDeadline>выполнить до {data.deadline}</TextDeadline>
+          <TextDeadline $styleTaskElements={styleTaskElements}>
+            {restOfDays && restOfDays > 0 ? `выполнить до ${data.deadline}` : 'просрочено'}
+          </TextDeadline>
           <RestOfDays>{restOfDaysBeforeDeadline}</RestOfDays>
         </DeadlineBox>
       )}
@@ -169,18 +162,19 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
         $hasDeadline={Boolean(data.deadline)}
         $styleParamsParent={styleParamsParent}
         $wasClickedButtonDescription={wasClickedButtonDescription}
+        $styleTaskElements={styleTaskElements}
         onTransitionEnd={handleTransitionEnd}
         ref={refTask}
       >
         <TaskBody
           data={data}
-          styleParamsParent={styleParamsParent}
           refTextDescription={refTextDescription}
           isActiveDescription={isActiveDescription}
           isDisabledButtonShowDescription={isDisabledButtonShowDescription}
           wasClickedButtonDescription={wasClickedButtonDescription}
           handleShowDescription={handleShowDescription}
           currentColumnLocation={currentColumnLocation}
+          styleTaskElements={styleTaskElements}
         />
       </StyledTask>
     </CommonWrapper>

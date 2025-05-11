@@ -5,11 +5,29 @@ const palette = {
   primary: { main: '#5433ff' },
   secondary: { main: '' },
   accent: { main: '' },
-  error: { dark: '#ce001a', main: '#ffadb7' },
+  error: { dark: '#ce001a', main: '#ffadb7', light: '#ffe8eb' },
   bg: { main: '' },
 
   gradients: {
     main: 'linear-gradient(to right, #5433ff, #20bdff, #a5fecb)',
+  },
+
+  red: {
+    50: '#ffebee',
+    75: '#ffe1e7',
+    100: '#ffcdd2',
+    150: '#ffadb7',
+    200: '#ef9a9a',
+    250: '#eb8181',
+    300: '#e57373',
+    400: '#ef5350',
+    500: '#f44336',
+    600: '#e53935',
+    700: '#d32f2f',
+    800: '#c62828',
+    900: '#b71c1c',
+    950: '#ab0e0e',
+    1000: '#880b0b',
   },
 
   grey: {

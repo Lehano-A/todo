@@ -1,4 +1,4 @@
-import { TaskType } from '../../../components/Main/Task/task.type'
+import { TaskType } from '../../../components/Main/Task/task.types'
 
 export interface TasksState {
   todo: TaskType[]

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { ReactComponent as IconCalendar } from '../../../images/icons/calendar.svg'
 import { ReactComponent as IconClear } from '../../../images/icons/clear.svg'
-import { TaskType } from '../../Main/Task/task.type'
+import { TaskType } from '../../Main/Task/task.types'
 
 const Form = styled('form')`
   min-width: 500px;
@@ -180,7 +180,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
         </BoxLabelInput>
 
         <BoxLabelInput>
-          <Label htmlFor='deadlineDatePicker'> Крайний срок выполнения </Label>
+          <Label htmlFor='deadlineDatePicker'> Крайняя дата выполнения (включительно) </Label>
           <Date
             id='deadlineDatePicker'
             placeholder='дд.мм.гггг'
