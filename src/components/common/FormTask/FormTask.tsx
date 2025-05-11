@@ -7,6 +7,10 @@ import { ReactComponent as IconCalendar } from '../../../images/icons/calendar.s
 import { ReactComponent as IconClear } from '../../../images/icons/clear.svg'
 import { TaskType } from '../../Main/Task/task.type'
 
+const Form = styled('form')`
+  min-width: 500px;
+`
+
 const Title = styled('h2')`
   font-size: 1.6rem;
   margin-bottom: 25px;
@@ -50,9 +54,10 @@ const Date = styled(DatePicker)`
 `
 
 const Description = styled('textarea')`
-  min-width: 400px;
-  max-width: 1000px;
-  min-height: 40px;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 60px;
+  max-height: 600px;
   margin-bottom: -4px;
 
   &:focus {
@@ -148,7 +153,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
     <>
       {title && <Title>{title}</Title>}
 
-      <form onSubmit={handleFormSubmit}>
+      <Form onSubmit={handleFormSubmit}>
         <BoxLabelInput>
           <Label htmlFor='taskNameInput'>Название задачи </Label>
           <NameTask
@@ -189,7 +194,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
           />
         </BoxLabelInput>
         <ButtonSubmit disabled={isDisabledSubmit}>{nameButtonSubmit}</ButtonSubmit>
-      </form>
+      </Form>
     </>
   )
 }

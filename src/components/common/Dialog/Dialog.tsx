@@ -9,7 +9,7 @@ const StyledDialog = styled('dialog')`
   border-radius: 10px;
   padding: 30px;
   min-width: 400px;
-  max-width: 600px;
+  max-width: 800px;
   overflow: visible;
 
   :where(& input, & textarea, & .ant-picker) {
