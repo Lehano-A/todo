@@ -26,14 +26,23 @@ function App() {
     if (dialogAddNewTask.isActive && refFormAddTask.current) {
       refFormAddTask.current.showModal()
     }
+    // } else if (!dialogAddNewTask.isActive && refFormAddTask.current) {
+    //   refFormAddTask.current.close()
+    // }
 
     if (dialogEditTask.isActive && refDialogEditTask.current) {
       refDialogEditTask.current.showModal()
     }
+    // } else if (!dialogEditTask.isActive && refDialogEditTask.current) {
+    //   refDialogEditTask.current.close()
+    // }
 
     if (dialogRemoveTask.isActive && refDialogRemoveTask.current) {
       refDialogRemoveTask.current.showModal()
     }
+    // } else if (!dialogRemoveTask.isActive && refDialogRemoveTask.current) {
+    //   refDialogRemoveTask.current.close()
+    // }
   }, [dialogAddNewTask.isActive, dialogEditTask.isActive, dialogRemoveTask.isActive])
 
   return (

@@ -51,6 +51,7 @@ const Dialog = forwardRef(function ({ children, handleCloseDialog }: React.Props
     <StyledDialog
       ref={ref}
       id='dialog'
+      onClose={handleCloseDialog || handleClose}
     >
       <span
         autoFocus

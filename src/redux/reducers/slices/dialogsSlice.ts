@@ -6,7 +6,10 @@ import { DialogClosePayload, DialogOpenPayload } from '../../types/payloads/dial
 import { DialogsState } from '../../types/slices/dialogsSlice.types'
 
 const initialState: DialogsState = {
-  dialogAddNewTask: { isActive: false, data: defaultFormValues },
+  dialogAddNewTask: {
+    isActive: false,
+    data: defaultFormValues,
+  },
 
   dialogEditTask: {
     isActive: false,
