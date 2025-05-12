@@ -4,9 +4,9 @@ import styled, { useTheme } from 'styled-components'
 
 import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
-import increment from '../../../utils/increment'
 import TaskBody from './TaskBody/TaskBody'
 import { DeadlineProps, StyleParamsParentType, StyledTaskProps, TaskProps } from './task.types'
+import { calculateDescriptionHeight } from './utils/calculateDescriptionHeight'
 import { calculateRestOfDaysBeforeDeadline } from './utils/calculateRestOfDaysBeforeDeadline'
 import { getColorsTaskElements } from './utils/getColorsTaskElements'
 
@@ -38,9 +38,9 @@ const StyledTask = styled('div')<StyledTaskProps>`
   background-color: ${({ $styleTaskElements }) => $styleTaskElements.bg};
   border-radius: ${({ $isTaskDone, $hasDeadline }) => ($isTaskDone || $hasDeadline ? 0 : '12px')} 12px 12px 12px;
   height: ${({ $wasClickedButtonDescription, $styleParamsParent }) =>
-    $wasClickedButtonDescription && $styleParamsParent?.withDescription.height
-      ? $styleParamsParent?.withDescription.height
-      : $styleParamsParent?.default.height};
+    $wasClickedButtonDescription && $styleParamsParent?.withOpenedDescription.height
+      ? `${$styleParamsParent?.withOpenedDescription.height}px`
+      : `${$styleParamsParent?.initial.height}px`};
 
   &:hover,
   &:focus {
@@ -91,8 +91,8 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
   const [isDisabledButtonShowDescription, setIsDisabledButtonShowDescription] = useState(false)
   const [styleParamsParent, setStyleParamsParent] = useState<StyleParamsParentType>({
-    default: { height: null }, // параметры без description
-    withDescription: { height: null }, // параметры с description
+    initial: { height: null }, // начальная высота задачи (в закрытом виде)
+    withOpenedDescription: { height: null }, // параметры с description
   })
 
   const restOfDays = useMemo(() => calculateRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
@@ -108,28 +108,9 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays), [restOfDays])
 
   useEffect(() => {
-    // расчёт высоты параграфа
+    // расчёт высоты параграфа Description
     if (refTask.current && refTextDescription.current) {
-      if (wasClickedButtonDescription && styleParamsParent.withDescription.height === null) {
-        const clientHeightTask = refTask.current.clientHeight
-        const clientHeightText = refTextDescription.current.clientHeight
-        const values = [clientHeightTask, clientHeightText] // значения для высоты параграфа
-
-        if (values.every((value): value is number => typeof value === 'number')) {
-          const calculatedHeight = increment(values)
-
-          setStyleParamsParent((prevState) => ({
-            ...prevState,
-            withDescription: { height: `${calculatedHeight}px` },
-          }))
-        }
-      }
-
-      if (styleParamsParent.default.height === null) {
-        const height = `${String(refTask.current.offsetHeight)}px`
-
-        setStyleParamsParent((prevState) => ({ ...prevState, default: { height } }))
-      }
+      calculateDescriptionHeight(styleParamsParent, setStyleParamsParent, refTask, refTextDescription)
     }
   }, [wasClickedButtonDescription, data.nameTask, data.description])
 
