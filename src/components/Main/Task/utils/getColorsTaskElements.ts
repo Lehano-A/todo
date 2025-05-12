@@ -22,7 +22,7 @@ export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDay
   }
 
   // просрочено
-  if (restOfDays <= 0) {
+  if (restOfDays < 0) {
     return {
       bg: grey[300],
       deadline: { bg: { ...defaultStyle.deadline.bg, main: grey[700] } },
@@ -49,7 +49,7 @@ export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDay
   }
 
   // от 1 до 3 включительно
-  if (restOfDays <= 3 && restOfDays >= 1) {
+  if (restOfDays <= 3 && restOfDays >= 0) {
     return {
       bg: red[900],
       deadline: defaultStyle.deadline,
