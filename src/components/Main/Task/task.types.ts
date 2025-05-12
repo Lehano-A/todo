@@ -22,11 +22,11 @@ export interface TaskProps {
 }
 
 export interface StyleParamsParentType {
-  default: {
-    height: string | null
+  initial: {
+    height: number | null
   }
-  withDescription: {
-    height: string | null
+  withOpenedDescription: {
+    height: number | null
   }
 }
 
