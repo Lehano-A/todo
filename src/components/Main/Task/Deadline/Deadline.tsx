@@ -18,10 +18,12 @@ const StyledDeadline = styled('time')<StyledDeadlineProps>`
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   background: ${({ $styleTaskElements, $isTaskDone, $isExpired }) => {
-    if ($isExpired) {
+    // если истёк срок выполнения и задача не в колонке "done"
+    if ($isExpired && !$isTaskDone) {
       return $styleTaskElements.deadline.bg.main
     }
 
+    // задача в колонке "done"
     if ($isTaskDone) {
       return $styleTaskElements.deadline.bg.done
     }
@@ -46,17 +48,17 @@ function Deadline({ data, restOfDays, isTaskDone, currentColumnLocation, styleTa
   }, [restOfDays])
 
   const textDeadline = useMemo(() => {
-    // если непросрочено и задача находится не в колонке 'Done'
+    // если не просрочено и задача находится не в колонке 'done'
     if (!isExpired && !isTaskDone) {
       return `выполнить до ${data.deadline}`
     }
 
-    // если просрочено
-    if (isExpired) {
+    // если истёк срок выполнения и задача не в колонке "done"
+    if (isExpired && !isTaskDone) {
       return 'просрочено'
     }
 
-    // если в колонке 'Done'
+    // если в колонке 'done'
     if (isTaskDone) {
       return `выполнено`
     }

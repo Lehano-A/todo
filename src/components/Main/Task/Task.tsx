@@ -54,8 +54,6 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const refTask = useRef<HTMLDivElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
 
-  const isTaskDone = currentColumnLocation === 'done' // находится ли задача в колонке 'done'
-
   const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
   const [isDisabledButtonShowDescription, setIsDisabledButtonShowDescription] = useState(false)
@@ -64,9 +62,11 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
     withOpenedDescription: { height: null }, // параметры с description
   })
 
+  const isTaskDone = currentColumnLocation === 'done' // находится ли задача в колонке 'done'
+
   const restOfDays = useMemo(() => calculateRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
 
-  const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays), [restOfDays])
+  const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays, isTaskDone), [restOfDays])
 
   useEffect(() => {
     // расчёт высоты параграфа Description
