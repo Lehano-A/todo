@@ -1,11 +1,11 @@
-import { pluralize } from 'numeralize-ru'
 import React, { TransitionEvent, useEffect, useMemo, useRef, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 
 import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
+import Deadline from './Deadline/Deadline'
 import TaskBody from './TaskBody/TaskBody'
-import { DeadlineProps, StyleParamsParentType, StyledTaskProps, TaskProps } from './task.types'
+import { StyleParamsParentType, StyledTaskProps, TaskProps } from './task.types'
 import { calculateDescriptionHeight } from './utils/calculateDescriptionHeight'
 import { calculateRestOfDaysBeforeDeadline } from './utils/calculateRestOfDaysBeforeDeadline'
 import { getColorsTaskElements } from './utils/getColorsTaskElements'
@@ -48,44 +48,13 @@ const StyledTask = styled('div')<StyledTaskProps>`
   }
 `
 
-const DeadlineBox = styled('div')`
-  position: absolute;
-  top: 1px; /* 1px, а не 0 - т.к. при открытии TextDescription, начинает мерцать нижняя граница во время анимации */
-  display: flex;
-  gap: 3px;
-`
-
-const Deadline = styled('time')<DeadlineProps>`
-  padding: 5px;
-  color: #fff;
-  font-size: 1.3rem;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  background: ${({ $styleTaskElements, $isTaskDone, $isExpired }) => {
-    if ($isExpired) {
-      return $styleTaskElements.deadline.bg.main
-    }
-
-    if ($isTaskDone) {
-      return $styleTaskElements.deadline.bg.done
-    }
-
-    return $styleTaskElements.deadline.bg.main
-  }};
-`
-
-const RestOfDays = styled('time')`
-  font-size: 1.2rem;
-  color: ${({ theme }) => theme.palette.error.dark};
-`
-
 function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const theme = useTheme()
 
   const refTask = useRef<HTMLDivElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
 
-  const isTaskDone = currentColumnLocation === 'done'
+  const isTaskDone = currentColumnLocation === 'done' // находится ли задача в колонке 'done'
 
   const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
@@ -96,14 +65,6 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
   })
 
   const restOfDays = useMemo(() => calculateRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
-  const isExpired = Boolean(restOfDays && restOfDays <= 0)
-
-  // остаток дней до дедлайна
-  const restOfDaysBeforeDeadline = useMemo(() => {
-    const caseText = pluralize(Number(restOfDays), 'день', 'дня', 'дней')
-
-    return `${restOfDays} ${caseText}`
-  }, [restOfDays])
 
   const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays), [restOfDays])
 
@@ -135,23 +96,6 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
     }
   }
 
-  const textDeadline = useMemo(() => {
-    // если непросрочено и задача находится не в колонке 'Done'
-    if (!isExpired && !isTaskDone) {
-      return `выполнить до ${data.deadline}`
-    }
-
-    // если просрочено
-    if (isExpired) {
-      return 'просрочено'
-    }
-
-    // если в колонке 'Done'
-    if (isTaskDone) {
-      return `выполнено`
-    }
-  }, [currentColumnLocation, data.deadline])
-
   return (
     <CommonWrapper
       {...provided?.draggableProps}
@@ -161,17 +105,13 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
       $isTaskDone={isTaskDone}
     >
       {(data.deadline || isTaskDone) && (
-        <DeadlineBox>
-          <Deadline
-            $styleTaskElements={styleTaskElements}
-            $isTaskDone={isTaskDone}
-            $isExpired={isExpired}
-          >
-            {textDeadline}
-          </Deadline>
-
-          {!isTaskDone && <RestOfDays>{restOfDaysBeforeDeadline}</RestOfDays>}
-        </DeadlineBox>
+        <Deadline
+          data={data}
+          restOfDays={restOfDays}
+          isTaskDone={isTaskDone}
+          currentColumnLocation={currentColumnLocation}
+          styleTaskElements={styleTaskElements}
+        />
       )}
 
       <StyledTask

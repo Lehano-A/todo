@@ -40,12 +40,6 @@ export interface StyledTaskProps {
   $wasClickedButtonDescription?: boolean
 }
 
-export interface DeadlineProps {
-  $isTaskDone: StyledTaskProps['$isTaskDone']
-  $isExpired: boolean
-  $styleTaskElements: StyleTaskElements
-}
-
 export interface TextDescriptionProps {
   $isActiveDescription: StyledTaskProps['$isActiveDescription']
   $wasClickedButtonDescription: StyledTaskProps['$wasClickedButtonDescription']

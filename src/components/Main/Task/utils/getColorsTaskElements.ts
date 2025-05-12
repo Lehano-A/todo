@@ -1,9 +1,10 @@
 import { DefaultTheme } from 'styled-components'
 
+import { StyleTaskElements } from '../task.types'
 import { RestOfDays } from './calculateRestOfDaysBeforeDeadline'
 
 // получить цвета элементов задачи
-export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDays) {
+export function getColorsTaskElements(theme: DefaultTheme, restOfDays: RestOfDays): StyleTaskElements {
   const white = '#fff'
   const green = theme.palette.green
   const red = theme.palette.red
