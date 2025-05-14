@@ -69,7 +69,7 @@ export function getColorsTaskElements(
     return defaultStyle
   }
 
-  if (restOfDays) {
+  if (typeof restOfDays === 'number') {
     // просрочено
     if (restOfDays < 0) {
       return getExpiredStyle({ defaultStyle, grey })
@@ -85,7 +85,7 @@ export function getColorsTaskElements(
       return getMidDeadlineStyle({ defaultStyle, red })
     }
 
-    // от 1 до 3 включительно
+    // от 0 до 3 включительно
     if (restOfDays <= 3 && restOfDays >= 0) {
       return getLowDeadlineStyle({ defaultStyle, red })
     }
