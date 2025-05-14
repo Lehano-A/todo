@@ -1,5 +1,5 @@
 import { StyleTaskElements, TaskProps } from '../task.types'
-import { RestOfDays } from '../utils/calculateRestOfDaysBeforeDeadline'
+import { RestOfDays } from '../utils/calcRestOfDaysBeforeDeadline'
 
 export interface DeadlineProps {
   data: TaskProps['data']

@@ -1,7 +1,7 @@
 import { DefaultTheme } from 'styled-components'
 
 import { StyleTaskElements } from '../task.types'
-import { RestOfDays } from './calculateRestOfDaysBeforeDeadline'
+import { RestOfDays } from './calcRestOfDaysBeforeDeadline'
 
 interface DefaultStyle {
   red: string

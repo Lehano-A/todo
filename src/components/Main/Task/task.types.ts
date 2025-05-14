@@ -21,12 +21,12 @@ export interface TaskProps {
   provided?: DraggableProvided
 }
 
-export interface StyleParamsParentType {
-  initial: {
-    height: number | null
+export interface StyleParamsTaskType {
+  closed: {
+    task: { heightWithoutValues: number | null; height: number | null }
   }
-  withOpenedDescription: {
-    height: number | null
+  opened: {
+    task: { heightWithoutValues: number | null; height: number | null }
   }
 }
 
@@ -34,7 +34,7 @@ export interface StyledTaskProps {
   $styleTaskElements: TaskControlProps['$styleTaskElements']
   $isTaskDone: boolean
   $hasDeadline?: boolean
-  $styleParamsParent: StyleParamsParentType
+  $styleParamsTask: StyleParamsTaskType
   $isDisabledButtonShowDescription?: boolean
   $isActiveDescription?: boolean
   $wasClickedButtonDescription?: boolean

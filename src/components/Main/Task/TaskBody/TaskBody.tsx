@@ -65,6 +65,7 @@ const TextDescription = styled('p')<TextDescriptionProps>`
 
 interface TaskBodyProps {
   data: TaskType
+  refTitle: React.RefObject<HTMLHeadingElement>
   refTextDescription: React.RefObject<HTMLDivElement>
   isActiveDescription: boolean
   isDisabledButtonShowDescription: boolean
@@ -76,6 +77,7 @@ interface TaskBodyProps {
 
 function TaskBody({
   data,
+  refTitle,
   refTextDescription,
   isActiveDescription,
   isDisabledButtonShowDescription,
@@ -98,7 +100,7 @@ function TaskBody({
 
   return (
     <>
-      <Title>{data.nameTask}</Title>
+      <Title ref={refTitle}>{data.nameTask}</Title>
 
       <Controls id='taskControls'>
         <Control

@@ -5,9 +5,9 @@ import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
 import Deadline from './Deadline/Deadline'
 import TaskBody from './TaskBody/TaskBody'
-import { StyleParamsParentType, StyledTaskProps, TaskProps } from './task.types'
-import { calculateDescriptionHeight } from './utils/calculateDescriptionHeight'
-import { calculateRestOfDaysBeforeDeadline } from './utils/calculateRestOfDaysBeforeDeadline'
+import { StyleParamsTaskType, StyledTaskProps, TaskProps } from './task.types'
+import { calcHeightTask } from './utils/calcHeightTask'
+import { calcRestOfDaysBeforeDeadline } from './utils/calcRestOfDaysBeforeDeadline'
 import { getColorsTaskElements } from './utils/getColorsTaskElements'
 
 const CommonWrapper = styled('div')<{ $hasDeadline: boolean; $isTaskDone: StyledTaskProps['$isTaskDone'] }>`
@@ -37,10 +37,11 @@ const StyledTask = styled('div')<StyledTaskProps>`
   word-break: break-word;
   background-color: ${({ $styleTaskElements }) => $styleTaskElements.bg};
   border-radius: ${({ $isTaskDone, $hasDeadline }) => ($isTaskDone || $hasDeadline ? 0 : '12px')} 12px 12px 12px;
-  height: ${({ $wasClickedButtonDescription, $styleParamsParent }) =>
-    $wasClickedButtonDescription && $styleParamsParent?.withOpenedDescription.height
-      ? `${$styleParamsParent?.withOpenedDescription.height}px`
-      : `${$styleParamsParent?.initial.height}px`};
+
+  height: ${({ $wasClickedButtonDescription, $styleParamsTask }) =>
+    $wasClickedButtonDescription && $styleParamsTask?.opened.task.height
+      ? `${$styleParamsTask?.opened.task.height}px`
+      : `${$styleParamsTask?.closed.task.height}px`};
 
   &:hover,
   &:focus {
@@ -52,26 +53,39 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
   const theme = useTheme()
 
   const refTask = useRef<HTMLDivElement>(null)
+  const refTitle = useRef<HTMLHeadingElement>(null)
   const refTextDescription = useRef<HTMLParagraphElement>(null)
 
   const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
   const [isDisabledButtonShowDescription, setIsDisabledButtonShowDescription] = useState(false)
-  const [styleParamsParent, setStyleParamsParent] = useState<StyleParamsParentType>({
-    initial: { height: null }, // начальная высота задачи (в закрытом виде)
-    withOpenedDescription: { height: null }, // параметры с description
+
+  const [styleParamsTask, setStyleParamsTask] = useState<StyleParamsTaskType>({
+    closed: {
+      task: { heightWithoutValues: null, height: null },
+    }, // description в закрытом виде
+    opened: {
+      task: { heightWithoutValues: null, height: null },
+    }, // с открытым description
   })
 
   const isTaskDone = currentColumnLocation === 'done' // находится ли задача в колонке 'done'
 
-  const restOfDays = useMemo(() => calculateRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
+  const restOfDays = useMemo(() => calcRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
 
   const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays, isTaskDone), [restOfDays])
 
   useEffect(() => {
+    // после монтирования компонента, без document.fonts.ready.then, вычисляется некорректная высота элемента h2, поэтому, чтобы вычисления происходили наверняка после установки всех стилей - используется document.fonts.ready.then
+    document.fonts.ready.then(() => {
+      calcHeightTask({ refTask, refTitle, refTextDescription, styleParamsTask, setStyleParamsTask })
+    })
+  }, [])
+
+  useEffect(() => {
     // расчёт высоты параграфа Description
-    if (refTask.current && refTextDescription.current) {
-      calculateDescriptionHeight(styleParamsParent, setStyleParamsParent, refTask, refTextDescription)
+    if (refTask.current && refTextDescription.current && typeof styleParamsTask.closed.task.height === 'number') {
+      calcHeightTask({ refTask, refTitle, refTextDescription, styleParamsTask, setStyleParamsTask })
     }
   }, [wasClickedButtonDescription, data.nameTask, data.description])
 
@@ -115,16 +129,17 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
       )}
 
       <StyledTask
+        ref={refTask}
         $isTaskDone={isTaskDone}
         $hasDeadline={Boolean(data.deadline)}
-        $styleParamsParent={styleParamsParent}
+        $styleParamsTask={styleParamsTask}
         $wasClickedButtonDescription={wasClickedButtonDescription}
         $styleTaskElements={styleTaskElements}
         onTransitionEnd={handleTransitionEnd}
-        ref={refTask}
       >
         <TaskBody
           data={data}
+          refTitle={refTitle}
           refTextDescription={refTextDescription}
           isActiveDescription={isActiveDescription}
           isDisabledButtonShowDescription={isDisabledButtonShowDescription}
