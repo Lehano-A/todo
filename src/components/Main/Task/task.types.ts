@@ -17,6 +17,7 @@ export interface TaskType {
 
 export interface TaskProps {
   data: TaskType
+  ordinalNumber: number
   currentColumnLocation: ColumnName
   provided?: DraggableProvided
 }
@@ -30,7 +31,7 @@ export interface StyleParamsTaskType {
   }
 }
 
-export interface StyledTaskProps {
+export interface InnerBoxTaskBodyProps {
   $styleTaskElements: TaskControlProps['$styleTaskElements']
   $isTaskDone: boolean
   $hasDeadline?: boolean
@@ -41,8 +42,8 @@ export interface StyledTaskProps {
 }
 
 export interface TextDescriptionProps {
-  $isActiveDescription: StyledTaskProps['$isActiveDescription']
-  $wasClickedButtonDescription: StyledTaskProps['$wasClickedButtonDescription']
+  $isActiveDescription: InnerBoxTaskBodyProps['$isActiveDescription']
+  $wasClickedButtonDescription: InnerBoxTaskBodyProps['$wasClickedButtonDescription']
 }
 
 export interface StyleTaskElements {

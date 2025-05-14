@@ -127,9 +127,10 @@ function TaskColumns() {
                       >
                         {(provided) => (
                           <Task
-                            currentColumnLocation={columnName}
-                            data={task}
                             provided={provided}
+                            data={task}
+                            ordinalNumber={index + 1}
+                            currentColumnLocation={columnName}
                           />
                         )}
                       </Draggable>

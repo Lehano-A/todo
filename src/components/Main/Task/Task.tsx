@@ -5,12 +5,12 @@ import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
 import Deadline from './Deadline/Deadline'
 import TaskBody from './TaskBody/TaskBody'
-import { StyleParamsTaskType, StyledTaskProps, TaskProps } from './task.types'
+import { InnerBoxTaskBodyProps, StyleParamsTaskType, TaskProps } from './task.types'
 import { calcHeightTask } from './utils/calcHeightTask'
 import { calcRestOfDaysBeforeDeadline } from './utils/calcRestOfDaysBeforeDeadline'
 import { getColorsTaskElements } from './utils/getColorsTaskElements'
 
-const CommonWrapper = styled('div')<{ $hasDeadline: boolean; $isTaskDone: StyledTaskProps['$isTaskDone'] }>`
+const CommonWrapper = styled('div')<{ $hasDeadline: boolean; $isTaskDone: InnerBoxTaskBodyProps['$isTaskDone'] }>`
   position: relative;
   margin: 8px 0;
   padding-top: ${({ $isTaskDone, $hasDeadline }) => ($isTaskDone || $hasDeadline ? '25px' : 0)};
@@ -24,7 +24,7 @@ const CommonWrapper = styled('div')<{ $hasDeadline: boolean; $isTaskDone: Styled
   }
 `
 
-const StyledTask = styled('div')<StyledTaskProps>`
+const InnerBoxTaskBody = styled('div')<InnerBoxTaskBodyProps>`
   position: relative;
   width: 300px;
   display: flex;
@@ -49,7 +49,19 @@ const StyledTask = styled('div')<StyledTaskProps>`
   }
 `
 
-function Task({ data, currentColumnLocation, provided }: TaskProps) {
+const OuterBoxTaskBody = styled('div')`
+  position: relative;
+`
+
+const OrdinalNumber = styled('span')`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -18px;
+  color: ${({ theme }) => theme.palette.grey[400]};
+`
+
+function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProps) {
   const theme = useTheme()
 
   const refTask = useRef<HTMLDivElement>(null)
@@ -128,27 +140,31 @@ function Task({ data, currentColumnLocation, provided }: TaskProps) {
         />
       )}
 
-      <StyledTask
-        ref={refTask}
-        $isTaskDone={isTaskDone}
-        $hasDeadline={Boolean(data.deadline)}
-        $styleParamsTask={styleParamsTask}
-        $wasClickedButtonDescription={wasClickedButtonDescription}
-        $styleTaskElements={styleTaskElements}
-        onTransitionEnd={handleTransitionEnd}
-      >
-        <TaskBody
-          data={data}
-          refTitle={refTitle}
-          refTextDescription={refTextDescription}
-          isActiveDescription={isActiveDescription}
-          isDisabledButtonShowDescription={isDisabledButtonShowDescription}
-          wasClickedButtonDescription={wasClickedButtonDescription}
-          handleShowDescription={handleShowDescription}
-          currentColumnLocation={currentColumnLocation}
-          styleTaskElements={styleTaskElements}
-        />
-      </StyledTask>
+      <OuterBoxTaskBody>
+        <OrdinalNumber>{ordinalNumber}</OrdinalNumber>
+
+        <InnerBoxTaskBody
+          ref={refTask}
+          $isTaskDone={isTaskDone}
+          $hasDeadline={Boolean(data.deadline)}
+          $styleParamsTask={styleParamsTask}
+          $wasClickedButtonDescription={wasClickedButtonDescription}
+          $styleTaskElements={styleTaskElements}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          <TaskBody
+            data={data}
+            refTitle={refTitle}
+            refTextDescription={refTextDescription}
+            isActiveDescription={isActiveDescription}
+            isDisabledButtonShowDescription={isDisabledButtonShowDescription}
+            wasClickedButtonDescription={wasClickedButtonDescription}
+            handleShowDescription={handleShowDescription}
+            currentColumnLocation={currentColumnLocation}
+            styleTaskElements={styleTaskElements}
+          />
+        </InnerBoxTaskBody>
+      </OuterBoxTaskBody>
     </CommonWrapper>
   )
 }
