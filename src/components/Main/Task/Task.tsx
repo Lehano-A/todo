@@ -1,12 +1,12 @@
-import React, { TransitionEvent, useEffect, useMemo, useRef, useState } from 'react'
+import React, { TransitionEvent, useMemo, useRef, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 
+import { useCalcHeightTask } from '../../../hooks/useCalcHeightTask'
 import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
 import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
 import Deadline from './Deadline/Deadline'
 import TaskBody from './TaskBody/TaskBody'
-import { InnerBoxTaskBodyProps, StyleParamsTaskType, TaskProps } from './task.types'
-import { calcHeightTask } from './utils/calcHeightTask'
+import { InnerBoxTaskBodyProps, StyleParamsTaskType, TaskElementsRefs, TaskProps } from './task.types'
 import { calcRestOfDaysBeforeDeadline } from './utils/calcRestOfDaysBeforeDeadline'
 import { getColorsTaskElements } from './utils/getColorsTaskElements'
 
@@ -64,10 +64,6 @@ const OrdinalNumber = styled('span')`
 function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProps) {
   const theme = useTheme()
 
-  const refTask = useRef<HTMLDivElement>(null)
-  const refTitle = useRef<HTMLHeadingElement>(null)
-  const refTextDescription = useRef<HTMLParagraphElement>(null)
-
   const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
   const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
   const [isDisabledButtonShowDescription, setIsDisabledButtonShowDescription] = useState(false)
@@ -81,25 +77,26 @@ function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProp
     }, // с открытым description
   })
 
+  const refs: TaskElementsRefs = {
+    refTask: useRef<HTMLDivElement>(null),
+    refTitle: useRef<HTMLHeadingElement>(null),
+    refTextDescription: useRef<HTMLParagraphElement>(null),
+  }
+
   const isTaskDone = currentColumnLocation === 'done' // находится ли задача в колонке 'done'
 
   const restOfDays = useMemo(() => calcRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
 
   const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays, isTaskDone), [restOfDays])
 
-  useEffect(() => {
-    // после монтирования компонента, без document.fonts.ready.then, вычисляется некорректная высота элемента h2, поэтому, чтобы вычисления происходили наверняка после установки всех стилей - используется document.fonts.ready.then
-    document.fonts.ready.then(() => {
-      calcHeightTask({ refTask, refTitle, refTextDescription, styleParamsTask, setStyleParamsTask })
-    })
-  }, [])
-
-  useEffect(() => {
-    // расчёт высоты параграфа Description
-    if (refTask.current && refTextDescription.current && typeof styleParamsTask.closed.task.height === 'number') {
-      calcHeightTask({ refTask, refTitle, refTextDescription, styleParamsTask, setStyleParamsTask })
-    }
-  }, [wasClickedButtonDescription, data.nameTask, data.description])
+  // высчитываем высоту задачи
+  useCalcHeightTask({
+    data,
+    refs,
+    styleParamsTask,
+    setStyleParamsTask,
+    wasClickedButtonDescription,
+  })
 
   // показать описание задачи
   function handleShowDescription() {
@@ -144,7 +141,7 @@ function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProp
         <OrdinalNumber>{ordinalNumber}</OrdinalNumber>
 
         <InnerBoxTaskBody
-          ref={refTask}
+          ref={refs.refTask}
           $isTaskDone={isTaskDone}
           $hasDeadline={Boolean(data.deadline)}
           $styleParamsTask={styleParamsTask}
@@ -154,8 +151,7 @@ function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProp
         >
           <TaskBody
             data={data}
-            refTitle={refTitle}
-            refTextDescription={refTextDescription}
+            refs={refs}
             isActiveDescription={isActiveDescription}
             isDisabledButtonShowDescription={isDisabledButtonShowDescription}
             wasClickedButtonDescription={wasClickedButtonDescription}

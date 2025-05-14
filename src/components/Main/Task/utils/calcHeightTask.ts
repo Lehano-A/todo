@@ -1,21 +1,15 @@
 import React from 'react'
 
-import { StyleParamsTaskType } from '../task.types'
+import { StyleParamsTaskType, TaskElementsRefs } from '../task.types'
 
-interface CaclHeightTask {
-  refTask: React.RefObject<HTMLDivElement>
-  refTitle: React.RefObject<HTMLHeadingElement>
-  refTextDescription: React.RefObject<HTMLParagraphElement>
+export interface CalсHeightTask {
+  refs: TaskElementsRefs
   styleParamsTask: StyleParamsTaskType
   setStyleParamsTask: React.Dispatch<React.SetStateAction<StyleParamsTaskType>>
 }
-export function calcHeightTask({
-  refTask,
-  refTitle,
-  refTextDescription,
-  styleParamsTask,
-  setStyleParamsTask,
-}: CaclHeightTask) {
+export function calcHeightTask({ refs, styleParamsTask, setStyleParamsTask }: CalсHeightTask) {
+  const { refTask, refTitle, refTextDescription } = refs
+
   // ссылки на элементы
   const task = refTask.current
   const title = refTitle.current

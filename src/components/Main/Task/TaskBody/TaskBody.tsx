@@ -7,9 +7,9 @@ import { ReactComponent as IconDelete } from '../../../../images/icons/delete.sv
 import { ReactComponent as IconEdit } from '../../../../images/icons/edit.svg'
 import { openDialog } from '../../../../redux/reducers/slices/dialogsSlice'
 import { TaskControl } from '../../../../styled/buttons'
-import { TaskProps } from '../task.types'
-import { StyleTaskElements, TaskType, TextDescriptionProps } from '../task.types'
+import { TextDescriptionProps } from '../task.types'
 import { translateBackward, translateForward } from './animation/translate'
+import { TaskBodyProps } from './taskBody.types'
 
 const StyledIconArrowDown = styled(IconArrowDown)`
   transform: ${({ $wasClickedButtonDescription }) => $wasClickedButtonDescription && 'rotate(180deg)'};
@@ -63,22 +63,9 @@ const TextDescription = styled('p')<TextDescriptionProps>`
   }};
 `
 
-interface TaskBodyProps {
-  data: TaskType
-  refTitle: React.RefObject<HTMLHeadingElement>
-  refTextDescription: React.RefObject<HTMLDivElement>
-  isActiveDescription: boolean
-  isDisabledButtonShowDescription: boolean
-  wasClickedButtonDescription: boolean
-  currentColumnLocation: TaskProps['currentColumnLocation']
-  styleTaskElements: StyleTaskElements
-  handleShowDescription: () => void
-}
-
 function TaskBody({
   data,
-  refTitle,
-  refTextDescription,
+  refs,
   isActiveDescription,
   isDisabledButtonShowDescription,
   wasClickedButtonDescription,
@@ -86,6 +73,8 @@ function TaskBody({
   currentColumnLocation,
   styleTaskElements,
 }: TaskBodyProps) {
+  const { refTitle, refTextDescription } = refs
+
   const dispatch = useDispatch()
 
   // показать диалоговое окно удаления задачи

@@ -22,6 +22,12 @@ export interface TaskProps {
   provided?: DraggableProvided
 }
 
+export interface TaskElementsRefs {
+  refTask: React.RefObject<HTMLDivElement>
+  refTitle: React.RefObject<HTMLHeadingElement>
+  refTextDescription: React.RefObject<HTMLParagraphElement>
+}
+
 export interface StyleParamsTaskType {
   closed: {
     task: { heightWithoutValues: number | null; height: number | null }
