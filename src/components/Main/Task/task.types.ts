@@ -47,11 +47,6 @@ export interface InnerBoxTaskBodyProps {
   $wasClickedButtonDescription?: boolean
 }
 
-export interface TextDescriptionProps {
-  $isActiveDescription: InnerBoxTaskBodyProps['$isActiveDescription']
-  $wasClickedButtonDescription: InnerBoxTaskBodyProps['$wasClickedButtonDescription']
-}
-
 export interface StyleTaskElements {
   bg: string
   deadline: { bg: { main: string; done: string } }

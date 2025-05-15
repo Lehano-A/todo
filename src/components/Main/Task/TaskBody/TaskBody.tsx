@@ -1,14 +1,12 @@
-import React from 'react'
 import { useDispatch } from 'react-redux'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { ReactComponent as IconArrowDown } from '../../../../images/icons/arrow-down.svg'
 import { ReactComponent as IconDelete } from '../../../../images/icons/delete.svg'
 import { ReactComponent as IconEdit } from '../../../../images/icons/edit.svg'
 import { openDialog } from '../../../../redux/reducers/slices/dialogsSlice'
 import { TaskControl } from '../../../../styled/buttons'
-import { TextDescriptionProps } from '../task.types'
-import { translateBackward, translateForward } from './animation/translate'
+import ContentBox from './ContentBox/ContentBox'
 import { TaskBodyProps } from './taskBody.types'
 
 const StyledIconArrowDown = styled(IconArrowDown)`
@@ -48,19 +46,11 @@ const ButtonShowDescription = styled(TaskControl)`
   height: 25px;
 `
 
-const TextDescription = styled('p')<TextDescriptionProps>`
-  font-size: 1.4rem;
+const Text = styled('p')`
+  display: flex;
   width: 100%;
+  font-size: 1.4rem;
   margin: 25px 0 0;
-
-  display: ${({ $wasClickedButtonDescription, $isActiveDescription }) =>
-    $wasClickedButtonDescription ? 'flex' : !$isActiveDescription && 'none'};
-
-  animation: ${({ $wasClickedButtonDescription }) => {
-    return css`
-      ${$wasClickedButtonDescription ? translateForward : translateBackward} 1s ease forwards
-    `
-  }};
 `
 
 function TaskBody({
@@ -108,22 +98,24 @@ function TaskBody({
       </Controls>
 
       {data.description && (
-        <ButtonShowDescription
-          $styleTaskElements={styleTaskElements} // прокидывается внутрь TaskControl
-          disabled={isDisabledButtonShowDescription}
-          onClick={handleShowDescription}
-        >
-          <StyledIconArrowDown $wasClickedButtonDescription={wasClickedButtonDescription} />
-        </ButtonShowDescription>
-      )}
+        <>
+          <ButtonShowDescription
+            $styleTaskElements={styleTaskElements} // прокидывается внутрь TaskControl
+            disabled={isDisabledButtonShowDescription}
+            onClick={handleShowDescription}
+          >
+            <StyledIconArrowDown $wasClickedButtonDescription={wasClickedButtonDescription} />
+          </ButtonShowDescription>
 
-      <TextDescription
-        $isActiveDescription={isActiveDescription}
-        $wasClickedButtonDescription={wasClickedButtonDescription}
-        ref={refTextDescription}
-      >
-        {data.description}
-      </TextDescription>
+          <ContentBox
+            wasClickedButtonDescription={wasClickedButtonDescription}
+            isActiveDescription={isActiveDescription}
+            refContentBox={refTextDescription}
+          >
+            <Text>{data.description}</Text>
+          </ContentBox>
+        </>
+      )}
     </>
   )
 }
