@@ -1,5 +1,5 @@
-import { ColumnName } from '../../../components/Main/Columns/columns.types'
 import { TaskType } from '../../../components/Main/Task/task.types'
+import { TaskColumnName } from '../../../components/Main/TaskColumns/taskColumns.types'
 
 export type DialogName = 'dialogAddNewTask' | 'dialogEditTask' | 'dialogRemoveTask'
 
@@ -11,13 +11,13 @@ export interface DialogsState {
 
   dialogEditTask: {
     isActive: boolean
-    columnName: ColumnName | null
+    columnName: TaskColumnName | null
     data: TaskType
   }
 
   dialogRemoveTask: {
     isActive: boolean
-    columnName: ColumnName | null
+    columnName: TaskColumnName | null
     data: TaskType
   }
 }

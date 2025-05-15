@@ -15,7 +15,7 @@ import { PrimaryButton } from '../../../styled/buttons'
 import Column from '../../../styled/column'
 import Task from '../Task/Task'
 import { TaskType, TasksType } from '../Task/task.types'
-import { Columns, StyledColumnProps } from './columns.types'
+import { StyledTaskColumnProps, TaskColumn } from './taskColumns.types'
 
 const BoxForStickyAddButton = styled('div')`
   position: relative;
@@ -23,7 +23,7 @@ const BoxForStickyAddButton = styled('div')`
   background-color: transparent;
 `
 
-const StyledColumn = styled(Column)<StyledColumnProps>`
+const StyledColumn = styled(Column)<StyledTaskColumnProps>`
   background-color: ${({ theme, $bgColor }) => theme.palette.taskColumns[$bgColor]};
   position: relative;
 `
@@ -51,7 +51,7 @@ const ButtonAddTask = styled(PrimaryButton)`
   margin: 90px 10px 0 0;
 `
 
-const columns: Columns[] = [
+const columns: TaskColumn[] = [
   { columnName: TODO_COLUMN_NAME, title: 'Сделать' },
   { columnName: INPROCESS_COLUMN_NAME, title: 'В процессе' },
   { columnName: DONE_COLUMN_NAME, title: 'Завершены' },

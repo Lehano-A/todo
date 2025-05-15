@@ -1,20 +1,20 @@
-import { ColumnName } from '../../../components/Main/Columns/columns.types'
 import { TaskType } from '../../../components/Main/Task/task.types'
+import { TaskColumnName } from '../../../components/Main/TaskColumns/taskColumns.types'
 
 export interface RemoveTaskPayload {
-  columnName: ColumnName
+  columnName: TaskColumnName
   id: string
 }
 
 export interface TransferTaskPayload {
-  columnFrom: ColumnName
-  columnWhere: ColumnName
+  columnFrom: TaskColumnName
+  columnWhere: TaskColumnName
   idPlaceFrom: number
   idPlaceWhere: number
 }
 
 export interface EditTaskPayload {
   id: string
-  columnName: ColumnName
+  columnName: TaskColumnName
   newData: TaskType
 }

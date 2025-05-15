@@ -1,6 +1,6 @@
 import { DraggableProvided } from '@hello-pangea/dnd'
 
-import { ColumnName } from '../Columns/columns.types'
+import { TaskColumnName } from '../TaskColumns/taskColumns.types'
 
 export interface TasksType {
   todo: TaskType[]
@@ -18,7 +18,7 @@ export interface TaskType {
 export interface TaskProps {
   data: TaskType
   ordinalNumber: number
-  currentColumnLocation: ColumnName
+  currentColumnLocation: TaskColumnName
   provided?: DraggableProvided
 }
 

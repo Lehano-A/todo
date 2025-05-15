@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import TaskColumns from './Columns/Columns'
+import TaskColumns from './TaskColumns/TaskColumns'
 
 const StyledMain = styled('main')`
   display: flex;
