@@ -25,15 +25,15 @@ export interface TaskProps {
 export interface TaskElementsRefs {
   refTask: React.RefObject<HTMLDivElement>
   refTitle: React.RefObject<HTMLHeadingElement>
-  refTextDescription: React.RefObject<HTMLParagraphElement>
+  refContentBox: React.RefObject<HTMLParagraphElement>
 }
 
 export interface StyleParamsTaskType {
   closed: {
-    task: { heightWithoutValues: number | null; height: number | null }
+    task: { heightWithoutContent: number | null; height: number | null }
   }
   opened: {
-    task: { heightWithoutValues: number | null; height: number | null }
+    task: { heightWithoutContent: number | null; height: number | null }
   }
 }
 
@@ -42,9 +42,8 @@ export interface InnerBoxTaskBodyProps {
   $isTaskDone: boolean
   $hasDeadline?: boolean
   $styleParamsTask: StyleParamsTaskType
-  $isDisabledButtonShowDescription?: boolean
-  $isActiveDescription?: boolean
-  $wasClickedButtonDescription?: boolean
+  $isOpenedContent?: boolean
+  $wasToggledButtonShowContent?: boolean
 }
 
 export interface StyleTaskElements {

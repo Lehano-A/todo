@@ -5,22 +5,22 @@ import { translateBackward, translateForward } from './animation/translate'
 import { ContentBoxProps, StyledBox } from './contentBox.types'
 
 const Box = styled('div')<StyledBox>`
-  display: ${({ $wasClickedButtonDescription, $isActiveDescription }) =>
-    $wasClickedButtonDescription ? 'flex' : !$isActiveDescription && 'none'};
+  display: ${({ $wasToggledButtonShowContent, $isOpenedContent }) =>
+    $wasToggledButtonShowContent ? 'flex' : !$isOpenedContent && 'none'};
 
-  animation: ${({ $wasClickedButtonDescription }) => {
+  animation: ${({ $wasToggledButtonShowContent }) => {
     return css`
-      ${$wasClickedButtonDescription ? translateForward : translateBackward} 1s ease forwards
+      ${$wasToggledButtonShowContent ? translateForward : translateBackward} 1s ease forwards
     `
   }};
 `
 
-function ContentBox({ children, refContentBox, isActiveDescription, wasClickedButtonDescription }: ContentBoxProps) {
+function ContentBox({ children, refContentBox, isOpenedContent, wasToggledButtonShowContent }: ContentBoxProps) {
   return (
     <Box
       ref={refContentBox}
-      $wasClickedButtonDescription={wasClickedButtonDescription}
-      $isActiveDescription={isActiveDescription}
+      $wasToggledButtonShowContent={wasToggledButtonShowContent}
+      $isOpenedContent={isOpenedContent}
     >
       {children}
     </Box>

@@ -10,7 +10,7 @@ import ContentBox from './ContentBox/ContentBox'
 import { TaskBodyProps } from './taskBody.types'
 
 const StyledIconArrowDown = styled(IconArrowDown)`
-  transform: ${({ $wasClickedButtonDescription }) => $wasClickedButtonDescription && 'rotate(180deg)'};
+  transform: ${({ $wasToggledButtonShowContent }) => $wasToggledButtonShowContent && 'rotate(180deg)'};
   transition: transform 0.3s ease;
 `
 
@@ -37,7 +37,7 @@ const Control = styled(TaskControl)`
   align-items: center;
 `
 
-const ButtonShowDescription = styled(TaskControl)`
+const ButtonShowContent = styled(TaskControl)`
   position: absolute;
   left: 50%;
   bottom: 2px; // 2px - чтобы была видна нижняя часть фокуса
@@ -46,7 +46,7 @@ const ButtonShowDescription = styled(TaskControl)`
   height: 25px;
 `
 
-const Text = styled('p')`
+const Description = styled('p')`
   display: flex;
   width: 100%;
   font-size: 1.4rem;
@@ -56,14 +56,14 @@ const Text = styled('p')`
 function TaskBody({
   data,
   refs,
-  isActiveDescription,
-  isDisabledButtonShowDescription,
-  wasClickedButtonDescription,
-  handleShowDescription,
+  isOpenedContent,
+  isDisabledButtonShowContent,
+  wasToggledButtonShowContent,
+  handleShowContent,
   currentColumnLocation,
   styleTaskElements,
 }: TaskBodyProps) {
-  const { refTitle, refTextDescription } = refs
+  const { refTitle, refContentBox } = refs
 
   const dispatch = useDispatch()
 
@@ -99,20 +99,20 @@ function TaskBody({
 
       {data.description && (
         <>
-          <ButtonShowDescription
+          <ButtonShowContent
             $styleTaskElements={styleTaskElements} // прокидывается внутрь TaskControl
-            disabled={isDisabledButtonShowDescription}
-            onClick={handleShowDescription}
+            disabled={isDisabledButtonShowContent}
+            onClick={handleShowContent}
           >
-            <StyledIconArrowDown $wasClickedButtonDescription={wasClickedButtonDescription} />
-          </ButtonShowDescription>
+            <StyledIconArrowDown $wasToggledButtonShowContent={wasToggledButtonShowContent} />
+          </ButtonShowContent>
 
           <ContentBox
-            wasClickedButtonDescription={wasClickedButtonDescription}
-            isActiveDescription={isActiveDescription}
-            refContentBox={refTextDescription}
+            wasToggledButtonShowContent={wasToggledButtonShowContent}
+            isOpenedContent={isOpenedContent}
+            refContentBox={refContentBox}
           >
-            <Text>{data.description}</Text>
+            <Description>{data.description}</Description>
           </ContentBox>
         </>
       )}

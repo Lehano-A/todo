@@ -38,8 +38,8 @@ const InnerBoxTaskBody = styled('div')<InnerBoxTaskBodyProps>`
   background-color: ${({ $styleTaskElements }) => $styleTaskElements.bg};
   border-radius: ${({ $isTaskDone, $hasDeadline }) => ($isTaskDone || $hasDeadline ? 0 : '12px')} 12px 12px 12px;
 
-  height: ${({ $wasClickedButtonDescription, $styleParamsTask }) =>
-    $wasClickedButtonDescription && $styleParamsTask?.opened.task.height
+  height: ${({ $wasToggledButtonShowContent, $styleParamsTask }) =>
+    $wasToggledButtonShowContent && $styleParamsTask?.opened.task.height
       ? `${$styleParamsTask?.opened.task.height}px`
       : `${$styleParamsTask?.closed.task.height}px`};
 
@@ -64,23 +64,23 @@ const OrdinalNumber = styled('span')`
 function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProps) {
   const theme = useTheme()
 
-  const [wasClickedButtonDescription, setWasClickedButtonDescription] = useState(false) // сам факт нажатия кнопки
-  const [isActiveDescription, setIsActiveDescription] = useState(false) // активно - при нажатии кнопки, неактивно - при завершении transition
-  const [isDisabledButtonShowDescription, setIsDisabledButtonShowDescription] = useState(false)
+  const [wasToggledButtonShowContent, setWasToggledButtonShowContent] = useState(false) // сам факт нажатия кнопки
+  const [isDisabledButtonShowContent, setIsDisabledButtonShowContent] = useState(false)
+  const [isOpenedContent, setIsOpenedContent] = useState(false) // открыто - при нажатии кнопки, закрыто - при завершении transition (handleTransitionEnd) (данное состояние необходимо для корректного отображения/скрытия при старте/финише анимации)
 
   const [styleParamsTask, setStyleParamsTask] = useState<StyleParamsTaskType>({
     closed: {
-      task: { heightWithoutValues: null, height: null },
-    }, // description в закрытом виде
+      task: { heightWithoutContent: null, height: null },
+    }, // Task в закрытом виде
     opened: {
-      task: { heightWithoutValues: null, height: null },
-    }, // с открытым description
+      task: { heightWithoutContent: null, height: null },
+    }, // Task с открытым ContentBox
   })
 
   const refs: TaskElementsRefs = {
     refTask: useRef<HTMLDivElement>(null),
     refTitle: useRef<HTMLHeadingElement>(null),
-    refTextDescription: useRef<HTMLParagraphElement>(null),
+    refContentBox: useRef<HTMLParagraphElement>(null),
   }
 
   const isTaskDone = currentColumnLocation === 'done' // находится ли задача в колонке 'done'
@@ -95,27 +95,27 @@ function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProp
     refs,
     styleParamsTask,
     setStyleParamsTask,
-    wasClickedButtonDescription,
+    wasToggledButtonShowContent,
   })
 
-  // показать описание задачи
-  function handleShowDescription() {
-    setWasClickedButtonDescription((prevState) => !prevState)
-    setIsDisabledButtonShowDescription(true)
+  // показать контент задачи
+  function handleShowContent() {
+    setWasToggledButtonShowContent((prevState) => !prevState)
+    setIsDisabledButtonShowContent(true)
 
-    if (!isActiveDescription) {
-      setIsActiveDescription(true)
+    if (!isOpenedContent) {
+      setIsOpenedContent(true)
     }
   }
 
   // обработать окончание перехода (завершения открытия/закрытия описания задачи)
   function handleTransitionEnd(e: TransitionEvent) {
     if (e.propertyName === 'height') {
-      if (!wasClickedButtonDescription) {
-        setIsActiveDescription(false)
+      if (!wasToggledButtonShowContent) {
+        setIsOpenedContent(false)
       }
 
-      setIsDisabledButtonShowDescription(false)
+      setIsDisabledButtonShowContent(false)
     }
   }
 
@@ -145,17 +145,17 @@ function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProp
           $isTaskDone={isTaskDone}
           $hasDeadline={Boolean(data.deadline)}
           $styleParamsTask={styleParamsTask}
-          $wasClickedButtonDescription={wasClickedButtonDescription}
+          $wasToggledButtonShowContent={wasToggledButtonShowContent}
           $styleTaskElements={styleTaskElements}
           onTransitionEnd={handleTransitionEnd}
         >
           <TaskBody
             data={data}
             refs={refs}
-            isActiveDescription={isActiveDescription}
-            isDisabledButtonShowDescription={isDisabledButtonShowDescription}
-            wasClickedButtonDescription={wasClickedButtonDescription}
-            handleShowDescription={handleShowDescription}
+            isOpenedContent={isOpenedContent}
+            isDisabledButtonShowContent={isDisabledButtonShowContent}
+            wasToggledButtonShowContent={wasToggledButtonShowContent}
+            handleShowContent={handleShowContent}
             currentColumnLocation={currentColumnLocation}
             styleTaskElements={styleTaskElements}
           />

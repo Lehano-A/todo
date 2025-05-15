@@ -3,10 +3,10 @@ import { StyleTaskElements, TaskElementsRefs, TaskProps, TaskType } from '../tas
 export interface TaskBodyProps {
   data: TaskType
   refs: TaskElementsRefs
-  isActiveDescription: boolean
-  isDisabledButtonShowDescription: boolean
-  wasClickedButtonDescription: boolean
+  isOpenedContent: boolean
+  isDisabledButtonShowContent: boolean
+  wasToggledButtonShowContent: boolean
   currentColumnLocation: TaskProps['currentColumnLocation']
   styleTaskElements: StyleTaskElements
-  handleShowDescription: () => void
+  handleShowContent: () => void
 }

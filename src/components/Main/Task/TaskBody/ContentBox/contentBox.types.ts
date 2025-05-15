@@ -5,11 +5,11 @@ import { InnerBoxTaskBodyProps } from '../../task.types'
 export interface ContentBoxProps {
   children?: React.ReactNode
   refContentBox: RefObject<HTMLDivElement>
-  isActiveDescription: InnerBoxTaskBodyProps['$isActiveDescription']
-  wasClickedButtonDescription: InnerBoxTaskBodyProps['$wasClickedButtonDescription']
+  isOpenedContent: InnerBoxTaskBodyProps['$isOpenedContent']
+  wasToggledButtonShowContent: InnerBoxTaskBodyProps['$wasToggledButtonShowContent']
 }
 
 export interface StyledBox {
-  $isActiveDescription: ContentBoxProps['isActiveDescription']
-  $wasClickedButtonDescription: ContentBoxProps['wasClickedButtonDescription']
+  $isOpenedContent: ContentBoxProps['isOpenedContent']
+  $wasToggledButtonShowContent: ContentBoxProps['wasToggledButtonShowContent']
 }

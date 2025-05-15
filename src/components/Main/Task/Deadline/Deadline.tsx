@@ -6,7 +6,7 @@ import { DeadlineProps, StyledDeadlineProps } from './deadline.types'
 
 const DeadlineBox = styled('div')`
   position: absolute;
-  top: 1px; /* 1px, а не 0 - т.к. при открытии TextDescription, начинает мерцать нижняя граница во время анимации */
+  top: 1px; /* 1px, а не 0 - т.к. при открытии ContentBox, начинает мерцать нижняя граница во время анимации */
   display: flex;
   gap: 3px;
 `

@@ -8,23 +8,23 @@ export interface CalсHeightTask {
   setStyleParamsTask: React.Dispatch<React.SetStateAction<StyleParamsTaskType>>
 }
 export function calcHeightTask({ refs, styleParamsTask, setStyleParamsTask }: CalсHeightTask) {
-  const { refTask, refTitle, refTextDescription } = refs
+  const { refTask, refTitle, refContentBox } = refs
 
   // ссылки на элементы
   const task = refTask.current
   const title = refTitle.current
-  const textDescription = refTextDescription.current
+  const contentBox = refContentBox.current
 
   // значения styleParamsParent
   const paramsClosedTask = styleParamsTask.closed.task
   const closedTaskHeight = paramsClosedTask.height
 
-  if (task && title && textDescription) {
+  if (task && title && contentBox) {
     // значения высот элементов
     const taskHeight = task.clientHeight
     const titleHeight = title.clientHeight
-    const textDescriptionHeight = textDescription.clientHeight
-    const taskHeightWithoutValues = taskHeight - titleHeight - textDescriptionHeight
+    const contentBoxHeight = contentBox.clientHeight
+    const taskHeightWithoutContent = taskHeight - titleHeight - contentBoxHeight
 
     // если ещё НЕ было присвоено значение в styleParamsParent.closed.task.height
     if (closedTaskHeight === null) {
@@ -32,7 +32,7 @@ export function calcHeightTask({ refs, styleParamsTask, setStyleParamsTask }: Ca
         ...prevState,
         closed: {
           task: {
-            heightWithoutValues: taskHeightWithoutValues,
+            heightWithoutContent: taskHeightWithoutContent,
             height: taskHeight,
           },
         },
@@ -41,15 +41,15 @@ export function calcHeightTask({ refs, styleParamsTask, setStyleParamsTask }: Ca
 
     // если значение уже было присвоено в styleParamsParent.closed.task.height
     if (typeof closedTaskHeight === 'number') {
-      const { heightWithoutValues } = paramsClosedTask
+      const { heightWithoutContent } = paramsClosedTask
 
-      if (heightWithoutValues) {
+      if (heightWithoutContent) {
         setStyleParamsTask((prevState) => ({
           closed: {
-            task: { ...prevState.closed.task, height: heightWithoutValues + titleHeight },
+            task: { ...prevState.closed.task, height: heightWithoutContent + titleHeight },
           },
           opened: {
-            task: { ...prevState.opened.task, height: heightWithoutValues + titleHeight + textDescriptionHeight },
+            task: { ...prevState.opened.task, height: heightWithoutContent + titleHeight + contentBoxHeight },
           },
         }))
       }

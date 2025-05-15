@@ -5,10 +5,10 @@ import { CalсHeightTask, calcHeightTask } from '../components/Main/Task/utils/c
 
 interface UseCalcHeightTaskProps {
   data: TaskProps['data']
-  wasClickedButtonDescription: boolean
+  refs: TaskElementsRefs
   styleParamsTask: CalсHeightTask['styleParamsTask']
   setStyleParamsTask: CalсHeightTask['setStyleParamsTask']
-  refs: TaskElementsRefs
+  wasToggledButtonShowContent: boolean
 }
 
 export function useCalcHeightTask({
@@ -16,9 +16,9 @@ export function useCalcHeightTask({
   refs,
   styleParamsTask,
   setStyleParamsTask,
-  wasClickedButtonDescription,
+  wasToggledButtonShowContent,
 }: UseCalcHeightTaskProps) {
-  const { refTask, refTextDescription } = refs
+  const { refTask, refContentBox } = refs
 
   useEffect(() => {
     // после монтирования компонента, без document.fonts.ready.then, вычисляется некорректная высота элемента h2, поэтому, чтобы вычисления происходили наверняка после установки всех стилей - используется document.fonts.ready.then
@@ -28,9 +28,9 @@ export function useCalcHeightTask({
   }, [])
 
   useEffect(() => {
-    // расчёт высоты параграфа Description
-    if (refTask.current && refTextDescription.current && typeof styleParamsTask.closed.task.height === 'number') {
+    // расчёт высоты ContentBox
+    if (refTask.current && refContentBox.current && typeof styleParamsTask.closed.task.height === 'number') {
       calcHeightTask({ refs, styleParamsTask, setStyleParamsTask })
     }
-  }, [wasClickedButtonDescription, data.nameTask, data.description])
+  }, [wasToggledButtonShowContent, data.nameTask, data.description])
 }
