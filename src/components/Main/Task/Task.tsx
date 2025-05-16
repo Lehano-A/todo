@@ -14,7 +14,8 @@ const CommonWrapper = styled('div')<{ $hasDeadline: boolean; $isTaskDone: InnerB
   position: relative;
   margin: 8px 0;
   padding-top: ${({ $isTaskDone, $hasDeadline }) => ($isTaskDone || $hasDeadline ? '25px' : 0)};
-
+  min-width: 222px;
+  width: 100%;
   &:focus-visible {
     ${simpleFocusOutlineStyle}
   }
@@ -26,7 +27,6 @@ const CommonWrapper = styled('div')<{ $hasDeadline: boolean; $isTaskDone: InnerB
 
 const InnerBoxTaskBody = styled('div')<InnerBoxTaskBodyProps>`
   position: relative;
-  width: 300px;
   display: flex;
   flex-direction: column;
   background-color: #fff;

@@ -5,23 +5,14 @@ import styled from 'styled-components'
 
 import { DONE_COLUMN_NAME, INPROCESS_COLUMN_NAME, TODO_COLUMN_NAME } from '../../../constants'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { ReactComponent as AddIcon } from '../../../images/icons/add.svg'
 import { initialTasksThunk } from '../../../redux/actions/tasksActions'
-import { openDialog } from '../../../redux/reducers/slices/dialogsSlice'
 import { disableDrop, enableDrop } from '../../../redux/reducers/slices/dndSlice'
 import { transferTask } from '../../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../../redux/store'
-import { PrimaryButton } from '../../../styled/buttons'
 import Column from '../../../styled/column'
 import Task from '../Task/Task'
 import { TaskType, TasksType } from '../Task/task.types'
 import { StyledTaskColumnProps, TaskColumn } from './taskColumns.types'
-
-const BoxForStickyAddButton = styled('div')`
-  position: relative;
-  display: flex;
-  background-color: transparent;
-`
 
 const StyledColumn = styled(Column)<StyledTaskColumnProps>`
   background-color: ${({ theme, $bgColor }) => theme.palette.taskColumns[$bgColor]};
@@ -33,22 +24,6 @@ const TitleColumn = styled('h2')`
   top: -10px;
   font-size: 1.8rem;
   margin-bottom: 40px;
-`
-
-const StyledAddIcon = styled(AddIcon)`
-  width: 100%;
-  height: 100%;
-`
-
-const ButtonAddTask = styled(PrimaryButton)`
-  position: sticky;
-  top: 50px;
-  width: 40px;
-  height: 40px;
-  background-size: 40px 40px;
-  background-color: white;
-  border-radius: 50%;
-  margin: 90px 10px 0 0;
 `
 
 const columns: TaskColumn[] = [
@@ -88,11 +63,6 @@ function TaskColumns() {
     }
   }
 
-  // активировать форму добавления новой задачи
-  function openDialogAddNewTask() {
-    dispatch(openDialog({ dialogName: 'dialogAddNewTask' }))
-  }
-
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       {columns.map((column, id) => {
@@ -103,13 +73,7 @@ function TaskColumns() {
             droppableId={columnName}
           >
             {(provided) => (
-              <BoxForStickyAddButton>
-                {columnName === TODO_COLUMN_NAME && (
-                  <ButtonAddTask onClick={openDialogAddNewTask}>
-                    <StyledAddIcon></StyledAddIcon>
-                  </ButtonAddTask>
-                )}
-
+              <>
                 <StyledColumn
                   $bgColor={columnName}
                   className={columnName}
@@ -139,7 +103,7 @@ function TaskColumns() {
 
                   {provided.placeholder}
                 </StyledColumn>
-              </BoxForStickyAddButton>
+              </>
             )}
           </Droppable>
         )

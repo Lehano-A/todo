@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 const Column = styled('div')`
-  width: 360px;
   min-height: 600px;
   display: flex;
   flex-direction: column;
