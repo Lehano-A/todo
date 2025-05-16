@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { setFactWindowResize } from '../../redux/reducers/slices/commonSlice'
 import { RootState } from '../../redux/store'
 import DialogAddNewTask from '../DialogAddNewTask/DialogAddNewTask'
 import DialogEditTask from '../DialogEditTask/DialogEditTask'
@@ -16,11 +17,24 @@ const StyledApp = styled('div')`
 `
 
 function App() {
+  const dispatch = useDispatch()
   const refFormAddTask = useRef<HTMLDialogElement>(null)
   const refDialogEditTask = useRef<HTMLDialogElement>(null)
   const refDialogRemoveTask = useRef<HTMLDialogElement>(null)
 
   const { dialogAddNewTask, dialogEditTask, dialogRemoveTask } = useSelector((state: RootState) => state.dialogs)
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      dispatch(setFactWindowResize())
+    })
+
+    return () => {
+      window.removeEventListener('resize', () => {
+        dispatch(setFactWindowResize())
+      })
+    }
+  }, [])
 
   useEffect(() => {
     if (dialogAddNewTask.isActive && refFormAddTask.current) {
