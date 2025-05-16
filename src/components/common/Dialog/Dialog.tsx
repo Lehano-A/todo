@@ -3,13 +3,15 @@ import styled from 'styled-components'
 
 import { ReactComponent as IconClose } from '../../../images/icons/close.svg'
 import { PrimaryButton } from '../../../styled/buttons'
+import { DialogProps, DialogStyledProps } from './dialog.types'
 
-const StyledDialog = styled('dialog')`
+const StyledDialog = styled('dialog')<{ $style: DialogStyledProps }>`
   border: none;
   border-radius: 10px;
   padding: 30px;
-  min-width: 400px;
-  max-width: 800px;
+  min-width: 300px;
+  max-width: ${({ $style }) => ($style?.maxWidth ? $style.maxWidth : '700px')};
+  width: 100%;
   overflow: visible;
 
   :where(& input, & textarea, & .ant-picker) {
@@ -33,12 +35,10 @@ const ButtonClose = styled(PrimaryButton)`
   border-radius: 50%;
 `
 
-interface DialogProps {
-  title?: string
-  handleCloseDialog?: () => void
-}
-
-const Dialog = forwardRef(function ({ children, handleCloseDialog }: React.PropsWithChildren & DialogProps, ref: any) {
+const Dialog = forwardRef(function (
+  { children, handleCloseDialog, style }: React.PropsWithChildren & DialogProps,
+  ref: any
+) {
   // обработать закрытие диалогового окна
 
   function handleClose() {
@@ -52,6 +52,7 @@ const Dialog = forwardRef(function ({ children, handleCloseDialog }: React.Props
       ref={ref}
       id='dialog'
       onClose={handleCloseDialog || handleClose}
+      $style={style || {}}
     >
       <span
         autoFocus
