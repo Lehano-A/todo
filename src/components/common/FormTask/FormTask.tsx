@@ -7,10 +7,6 @@ import { ReactComponent as IconCalendar } from '../../../images/icons/calendar.s
 import { ReactComponent as IconClear } from '../../../images/icons/clear.svg'
 import { TaskType } from '../../Main/Task/task.types'
 
-const Form = styled('form')`
-  min-width: 500px;
-`
-
 const Title = styled('h2')`
   font-size: 1.6rem;
   margin-bottom: 25px;
@@ -153,7 +149,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
     <>
       {title && <Title>{title}</Title>}
 
-      <Form onSubmit={handleFormSubmit}>
+      <form onSubmit={handleFormSubmit}>
         <BoxLabelInput>
           <Label htmlFor='taskNameInput'>Название задачи </Label>
           <NameTask
@@ -194,7 +190,7 @@ function FormTask({ handleSubmit, valuesForInputs, title, nameButtonSubmit = 'С
           />
         </BoxLabelInput>
         <ButtonSubmit disabled={isDisabledSubmit}>{nameButtonSubmit}</ButtonSubmit>
-      </Form>
+      </form>
     </>
   )
 }
