@@ -14,7 +14,9 @@ interface DialogRemoveTaskProps {
 const CommonBox = styled('div')`
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-top: 20px;
+  word-break: break-all;
 `
 
 const ButtonsBox = styled('div')`
@@ -22,13 +24,21 @@ const ButtonsBox = styled('div')`
   justify-content: center;
 `
 
-const Text = styled('p')`
+const BoxText = styled('div')`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 30px;
 `
 
-const StyledNameTask = styled('span')`
+const ConfirmationQuestion = styled('p')`
+  font-size: 1.6rem;
+`
+
+const NameTask = styled('span')`
   font-family: Rubik;
   font-weight: 600;
+  margin-top: 10px;
 `
 
 const StyledButton = styled('button')`
@@ -75,11 +85,13 @@ function DialogRemoveTask({ refDialog }: DialogRemoveTaskProps & { handleRemoveT
     <Dialog
       ref={refDialog}
       handleCloseDialog={handleCloseDialog}
+      style={{ maxWidth: '500px' }}
     >
       <CommonBox>
-        <Text>
-          Вы действительно хотите удалить задачу <StyledNameTask>{data.nameTask}</StyledNameTask>?
-        </Text>
+        <BoxText>
+          <ConfirmationQuestion>Вы действительно хотите эту удалить задачу?</ConfirmationQuestion>
+          <NameTask>{data.nameTask}</NameTask>
+        </BoxText>
 
         <ButtonsBox>
           <ButtonConfirm onClick={handleRemoveTask}>Удалить</ButtonConfirm>
