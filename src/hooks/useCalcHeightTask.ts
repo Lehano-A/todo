@@ -1,9 +1,7 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
 
 import { TaskElementsRefs, TaskProps } from '../components/Main/Task/task.types'
 import { CalсHeightTask, calcHeightTask } from '../components/Main/Task/utils/calcHeightTask'
-import { RootState } from '../redux/store'
 
 interface UseCalcHeightTaskProps {
   data: TaskProps['data']
@@ -22,7 +20,8 @@ export function useCalcHeightTask({
 }: UseCalcHeightTaskProps) {
   const { refTask, refContentBox } = refs
 
-  const didWindowResize = useSelector((state: RootState) => state.common.didWindowResize)
+  const titleClientHeight = refs.refTitle.current?.clientHeight
+  const contentBoxClientHeight = refs.refContentBox.current?.clientHeight
 
   useEffect(() => {
     // после монтирования компонента, без document.fonts.ready.then, вычисляется некорректная высота элемента h2, поэтому, чтобы вычисления происходили наверняка после установки всех стилей - используется document.fonts.ready.then
@@ -36,5 +35,5 @@ export function useCalcHeightTask({
     if (refTask.current && refContentBox.current && typeof styleParamsTask.closed.task.height === 'number') {
       calcHeightTask({ refs, styleParamsTask, setStyleParamsTask })
     }
-  }, [wasToggledButtonShowContent, data.nameTask, data.description, didWindowResize])
+  }, [wasToggledButtonShowContent, data.nameTask, data.description, titleClientHeight, contentBoxClientHeight])
 }
