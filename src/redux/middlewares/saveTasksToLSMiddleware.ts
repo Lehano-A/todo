@@ -17,7 +17,6 @@ export const saveTasksToLSMiddleware: Middleware = (store) => (next) => (action)
 
       const result = next(action) // сначала пропускаем экшен через редьюсеры
       ls.saveTasks(store.getState().tasks)
-      // localStorage.setItem('tasks', JSON.stringify(store.getState().tasks))
 
       return result
     }
