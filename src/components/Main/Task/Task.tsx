@@ -53,7 +53,9 @@ const OuterBoxTaskBody = styled('div')`
   position: relative;
 `
 
+// На более верхнем уровне не определён этот элемент потому, что необходима оцентровка именно по телу задачи, не учитывая Deadline
 const OrdinalNumber = styled('span')`
+  pointer-events: none; // отменяем возможность перетаскивать задачу за порядковый номер.
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -61,7 +63,7 @@ const OrdinalNumber = styled('span')`
   color: ${({ theme }) => theme.palette.grey[400]};
 `
 
-function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProps) {
+function Task({ data, index, ordinalNumber, currentColumnLocation, provided }: TaskProps & { index: any }) {
   const theme = useTheme()
 
   const [wasToggledButtonShowContent, setWasToggledButtonShowContent] = useState(false) // сам факт нажатия кнопки
@@ -156,7 +158,6 @@ function Task({ data, ordinalNumber, currentColumnLocation, provided }: TaskProp
             isDisabledButtonShowContent={isDisabledButtonShowContent}
             wasToggledButtonShowContent={wasToggledButtonShowContent}
             handleShowContent={handleShowContent}
-            currentColumnLocation={currentColumnLocation}
             styleTaskElements={styleTaskElements}
           />
         </InnerBoxTaskBody>

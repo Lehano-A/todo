@@ -8,6 +8,7 @@ const DeadlineBox = styled('div')`
   position: absolute;
   top: 1px; /* 1px, а не 0 - т.к. при открытии ContentBox, начинает мерцать нижняя граница во время анимации */
   display: flex;
+  min-height: 25px;
   gap: 3px;
 `
 

@@ -1,4 +1,4 @@
-import { DragDropContext, Draggable, DropResult, Droppable } from '@hello-pangea/dnd'
+import { DragDropContext, DropResult, Droppable } from '@hello-pangea/dnd'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -10,8 +10,8 @@ import { disableDrop, enableDrop } from '../../../redux/reducers/slices/dndSlice
 import { transferTask } from '../../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../../redux/store'
 import Column from '../../../styled/column'
-import Task from '../Task/Task'
 import { TaskType, TasksType } from '../Task/task.types'
+import TaskItem from './TaskItem/TaskItem'
 import { StyledTaskColumnProps, TaskColumn } from './taskColumns.types'
 
 const StyledColumn = styled(Column)<StyledTaskColumnProps>`
@@ -72,7 +72,7 @@ function TaskColumns() {
             key={id}
             droppableId={columnName}
           >
-            {(provided) => (
+            {(provided, snapshot) => (
               <>
                 <StyledColumn
                   $bgColor={columnName}
@@ -82,22 +82,15 @@ function TaskColumns() {
                 >
                   <TitleColumn>{title}</TitleColumn>
 
-                  {allTasks[columnName].map((task: TaskType, index) => {
+                  {allTasks[columnName].map((task: TaskType, index: number) => {
                     return (
-                      <Draggable
+                      <TaskItem
                         key={task.id}
-                        draggableId={task.id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <Task
-                            provided={provided}
-                            data={task}
-                            ordinalNumber={index + 1}
-                            currentColumnLocation={columnName}
-                          />
-                        )}
-                      </Draggable>
+                        data={task}
+                        isDraggingOver={snapshot.isDraggingOver}
+                        ordinalNumber={index}
+                        currentColumnLocation={columnName}
+                      />
                     )
                   })}
 

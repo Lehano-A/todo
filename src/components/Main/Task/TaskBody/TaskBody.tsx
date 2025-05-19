@@ -1,10 +1,6 @@
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReactComponent as IconArrowDown } from '../../../../images/icons/arrow-down.svg'
-import { ReactComponent as IconDelete } from '../../../../images/icons/delete.svg'
-import { ReactComponent as IconEdit } from '../../../../images/icons/edit.svg'
-import { openDialog } from '../../../../redux/reducers/slices/dialogsSlice'
 import { TaskControl } from '../../../../styled/buttons'
 import ContentBox from './ContentBox/ContentBox'
 import { TaskBodyProps } from './taskBody.types'
@@ -17,24 +13,6 @@ const StyledIconArrowDown = styled(IconArrowDown)`
 const Title = styled('h2')`
   font-size: 1.4rem;
   font-weight: 600;
-`
-
-const Controls = styled('div')`
-  position: absolute;
-  top: 5px;
-  right: 8px;
-  display: flex;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-`
-
-const Control = styled(TaskControl)`
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `
 
 const ButtonShowContent = styled(TaskControl)`
@@ -60,42 +38,13 @@ function TaskBody({
   isDisabledButtonShowContent,
   wasToggledButtonShowContent,
   handleShowContent,
-  currentColumnLocation,
   styleTaskElements,
 }: TaskBodyProps) {
   const { refTitle, refContentBox } = refs
 
-  const dispatch = useDispatch()
-
-  // показать диалоговое окно удаления задачи
-  function showDialogRemoveTask() {
-    dispatch(openDialog({ dialogName: 'dialogRemoveTask', data, columnName: currentColumnLocation }))
-  }
-
-  // показать диалоговое окно редактирования задачи
-  function showDialogEditTask() {
-    dispatch(openDialog({ dialogName: 'dialogEditTask', data, columnName: currentColumnLocation }))
-  }
-
   return (
     <>
       <Title ref={refTitle}>{data.nameTask}</Title>
-
-      <Controls id='taskControls'>
-        <Control
-          onClick={showDialogEditTask}
-          $styleTaskElements={styleTaskElements}
-        >
-          <IconEdit />
-        </Control>
-
-        <Control
-          onClick={showDialogRemoveTask}
-          $styleTaskElements={styleTaskElements} // прокидывается внутрь TaskControl
-        >
-          <IconDelete />
-        </Control>
-      </Controls>
 
       {data.description && (
         <>

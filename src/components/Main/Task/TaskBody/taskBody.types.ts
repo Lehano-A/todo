@@ -1,4 +1,4 @@
-import { StyleTaskElements, TaskElementsRefs, TaskProps, TaskType } from '../task.types'
+import { StyleTaskElements, TaskElementsRefs, TaskType } from '../task.types'
 
 export interface TaskBodyProps {
   data: TaskType
@@ -6,7 +6,6 @@ export interface TaskBodyProps {
   isOpenedContent: boolean
   isDisabledButtonShowContent: boolean
   wasToggledButtonShowContent: boolean
-  currentColumnLocation: TaskProps['currentColumnLocation']
   styleTaskElements: StyleTaskElements
   handleShowContent: () => void
 }
