@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { TaskControlProps } from '../components/Main/Task/task.types'
+import { StyleTaskElements } from '../components/Main/Task/task.types'
 import { simpleFocusOutlineStyle } from './css/highlighting'
 
 export const PrimaryButton = styled('button')`
@@ -17,15 +17,17 @@ export const PrimaryButton = styled('button')`
   }
 `
 
-export const TaskControl = styled('button')<TaskControlProps>`
+export const TaskControl = styled('button')<{ $styleTaskElements?: StyleTaskElements }>`
   & svg {
-    fill: ${({ $styleTaskElements }) => $styleTaskElements.control.fill};
+    fill: ${({ theme, $styleTaskElements }) =>
+      $styleTaskElements ? $styleTaskElements.control.fill : theme.palette.grey[500]};
   }
 
   &:hover {
     & svg {
       transition: fill 0.15s ease-in;
-      fill: ${({ $styleTaskElements }) => $styleTaskElements.control.hover};
+      fill: ${({ theme, $styleTaskElements }) =>
+        $styleTaskElements ? $styleTaskElements.control.hover : theme.palette.grey[300]};
     }
   }
 
@@ -34,7 +36,8 @@ export const TaskControl = styled('button')<TaskControlProps>`
 
     & svg {
       transition: fill 0.15s ease-in;
-      fill: ${({ $styleTaskElements }) => $styleTaskElements.control.hover};
+      fill: ${({ theme, $styleTaskElements }) =>
+        $styleTaskElements ? $styleTaskElements.control.hover : theme.palette.grey[300]};
     }
   }
 `
