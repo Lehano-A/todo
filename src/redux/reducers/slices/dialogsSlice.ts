@@ -8,19 +8,19 @@ import { DialogsState } from '../../types/slices/dialogsSlice.types'
 const initialState: DialogsState = {
   dialogAddNewTask: {
     isActive: false,
-    data: defaultFormValues,
+    dataTask: defaultFormValues,
   },
 
   dialogEditTask: {
     isActive: false,
     columnName: null,
-    data: defaultFormValues,
+    dataTask: defaultFormValues,
   },
 
   dialogRemoveTask: {
     isActive: false,
     columnName: null,
-    data: defaultFormValues,
+    dataTask: defaultFormValues,
   },
 }
 
@@ -29,12 +29,12 @@ const dialogsSlice = createSlice({
   initialState,
   reducers: {
     openDialog: (state, action: PayloadAction<DialogOpenPayload>) => {
-      const { dialogName, columnName = null, data = null } = action.payload
+      const { dialogName, columnName = null, dataTask = null } = action.payload
 
       state[dialogName].isActive = true
 
-      if (data) {
-        state[dialogName].data = data
+      if (dataTask) {
+        state[dialogName].dataTask = dataTask
       }
 
       // если это диалоги - 'editTask' и 'removeTask'
@@ -47,7 +47,7 @@ const dialogsSlice = createSlice({
       const { dialogName } = action.payload
 
       state[dialogName].isActive = false
-      state[dialogName].data = defaultFormValues
+      state[dialogName].dataTask = defaultFormValues
     },
   },
 })

@@ -1,4 +1,4 @@
-import { TaskType } from '../../../components/Main/Task/task.types'
+import { TaskType } from '../../../components/Main/TaskColumns/TaskItem/Task/task.types'
 import { TaskColumnName } from '../../../components/Main/TaskColumns/taskColumns.types'
 
 export type DialogName = 'dialogAddNewTask' | 'dialogEditTask' | 'dialogRemoveTask'
@@ -6,18 +6,18 @@ export type DialogName = 'dialogAddNewTask' | 'dialogEditTask' | 'dialogRemoveTa
 export interface DialogsState {
   dialogAddNewTask: {
     isActive: boolean
-    data: TaskType
+    dataTask: TaskType
   }
 
   dialogEditTask: {
     isActive: boolean
     columnName: TaskColumnName | null
-    data: TaskType
+    dataTask: TaskType
   }
 
   dialogRemoveTask: {
     isActive: boolean
     columnName: TaskColumnName | null
-    data: TaskType
+    dataTask: TaskType
   }
 }
