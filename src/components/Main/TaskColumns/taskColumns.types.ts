@@ -1,4 +1,4 @@
-import { TasksType } from '../Task/task.types'
+import { TasksType } from './TaskItem/Task/task.types'
 
 export type TaskColumnName = 'todo' | 'inProcess' | 'done'
 

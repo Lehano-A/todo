@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { DONE_COLUMN_NAME } from '../../../../constants'
-import { ReactComponent as IconDelete } from '../../../../images/icons/delete.svg'
-import { ReactComponent as IconEdit } from '../../../../images/icons/edit.svg'
-import { openDialog } from '../../../../redux/reducers/slices/dialogsSlice'
-import { TaskControl } from '../../../../styled/buttons'
-import { TaskType, TasksType } from '../task.types'
+import { DONE_COLUMN_NAME } from '../../../../../../constants'
+import { TaskItemContext } from '../../../../../../contexts/TaskItemContext'
+import { ReactComponent as IconDelete } from '../../../../../../images/icons/delete.svg'
+import { ReactComponent as IconEdit } from '../../../../../../images/icons/edit.svg'
+import { openDialog } from '../../../../../../redux/reducers/slices/dialogsSlice'
+import { TaskControl } from '../../../../../../styled/buttons'
 
 const StyledControls = styled('div')<{ $hasDeadline: boolean }>`
   position: absolute;
@@ -34,27 +34,26 @@ const Control = styled(TaskControl)`
   align-items: center;
 `
 
-interface Controls {
-  data: TaskType
-  currentColumnLocation: keyof TasksType
-}
+function Controls() {
+  const { dataTask, currentColumnLocation } = useContext(TaskItemContext)
 
-function Controls({ data, currentColumnLocation }: Controls) {
   const dispatch = useDispatch()
 
   // показать диалоговое окно удаления задачи
   function showDialogRemoveTask() {
-    dispatch(openDialog({ dialogName: 'dialogRemoveTask', data, columnName: currentColumnLocation }))
+    dispatch(openDialog({ dialogName: 'dialogRemoveTask', dataTask, columnName: currentColumnLocation }))
   }
 
   // показать диалоговое окно редактирования задачи
   function showDialogEditTask() {
-    dispatch(openDialog({ dialogName: 'dialogEditTask', data, columnName: currentColumnLocation }))
+    dispatch(openDialog({ dialogName: 'dialogEditTask', dataTask, columnName: currentColumnLocation }))
   }
   return (
     <StyledControls
       id='taskControls'
-      $hasDeadline={Boolean(data.deadline) || (data.deadline === '' && currentColumnLocation === DONE_COLUMN_NAME)}
+      $hasDeadline={
+        Boolean(dataTask.deadline) || (dataTask.deadline === '' && currentColumnLocation === DONE_COLUMN_NAME)
+      }
     >
       <Control onClick={showDialogEditTask}>
         <IconEdit />

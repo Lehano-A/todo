@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeDialog } from '../../redux/reducers/slices/dialogsSlice'
 import { editTask } from '../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../redux/store'
-import { TaskType } from '../Main/Task/task.types'
+import { TaskType } from '../Main/TaskColumns/TaskItem/Task/task.types'
 import Dialog from '../common/Dialog/Dialog'
 import FormTask from '../common/FormTask/FormTask'
 
@@ -16,7 +16,7 @@ function DialogEditTask({ refDialog }: DialogEditTaskProps) {
   const dispatch = useDispatch()
 
   const { dialogEditTask } = useSelector((state: RootState) => state.dialogs)
-  const { columnName, data } = dialogEditTask
+  const { columnName, dataTask } = dialogEditTask
 
   // обработать закрытие диалогового окна
   function handleCloseDialog() {
@@ -28,7 +28,7 @@ function DialogEditTask({ refDialog }: DialogEditTaskProps) {
 
   function handleEditSubmit(e: React.FormEvent<HTMLFormElement>, inputsValues: TaskType) {
     if (columnName) {
-      dispatch(editTask({ columnName, newData: inputsValues, id: data.id }))
+      dispatch(editTask({ columnName, newData: inputsValues, id: dataTask.id }))
       handleCloseDialog()
     }
   }
@@ -41,7 +41,7 @@ function DialogEditTask({ refDialog }: DialogEditTaskProps) {
       <FormTask
         title='Редактируем задачу'
         nameButtonSubmit='Обновить'
-        valuesForInputs={dialogEditTask.data}
+        valuesForInputs={dialogEditTask.dataTask}
         handleSubmit={handleEditSubmit}
       />
     </Dialog>

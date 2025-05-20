@@ -1,8 +1,10 @@
 import { pluralize } from 'numeralize-ru'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { DeadlineProps, StyledDeadlineProps } from './deadline.types'
+import { TaskBodyContext } from '../../../../../../contexts/TaskBodyContext'
+import { TaskItemContext } from '../../../../../../contexts/TaskItemContext'
+import { StyledDeadlineProps } from './deadline.types'
 
 const DeadlineBox = styled('div')`
   position: absolute;
@@ -38,7 +40,12 @@ const RestOfDays = styled('time')`
   color: ${({ theme }) => theme.palette.error.dark};
 `
 
-function Deadline({ data, restOfDays, isTaskDone, currentColumnLocation, styleTaskElements }: DeadlineProps) {
+function Deadline() {
+  const { dataTask, currentColumnLocation } = useContext(TaskItemContext)
+  const { deadline } = dataTask
+
+  const { isTaskDone, restOfDays, styleTaskElements } = useContext(TaskBodyContext)
+
   const isExpired = Boolean(restOfDays && restOfDays <= 0)
 
   // остаток дней до дедлайна
@@ -51,7 +58,7 @@ function Deadline({ data, restOfDays, isTaskDone, currentColumnLocation, styleTa
   const textDeadline = useMemo(() => {
     // если не просрочено и задача находится не в колонке 'done'
     if (!isExpired && !isTaskDone) {
-      return `выполнить до ${data.deadline}`
+      return `выполнить до ${deadline}`
     }
 
     // если истёк срок выполнения и задача не в колонке "done"
@@ -63,7 +70,7 @@ function Deadline({ data, restOfDays, isTaskDone, currentColumnLocation, styleTa
     if (isTaskDone) {
       return `выполнено`
     }
-  }, [currentColumnLocation, data.deadline])
+  }, [currentColumnLocation, deadline])
 
   return (
     <DeadlineBox>

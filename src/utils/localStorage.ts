@@ -1,4 +1,4 @@
-import { TasksType } from '../components/Main/Task/task.types'
+import { TasksType } from '../components/Main/TaskColumns/TaskItem/Task/task.types'
 import { ALL_TASKS } from '../constants'
 
 const ls = {

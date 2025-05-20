@@ -1,9 +1,12 @@
+import { useContext } from 'react'
 import styled from 'styled-components'
 
-import { ReactComponent as IconArrowDown } from '../../../../images/icons/arrow-down.svg'
-import { TaskControl } from '../../../../styled/buttons'
+import { TaskBodyContext } from '../../../../../../contexts/TaskBodyContext'
+import { TaskItemContext } from '../../../../../../contexts/TaskItemContext'
+import { ReactComponent as IconArrowDown } from '../../../../../../images/icons/arrow-down.svg'
+import { TaskControl } from '../../../../../../styled/buttons'
+import { TaskElementsRefs } from '../task.types'
 import ContentBox from './ContentBox/ContentBox'
-import { TaskBodyProps } from './taskBody.types'
 
 const StyledIconArrowDown = styled(IconArrowDown)`
   transform: ${({ $wasToggledButtonShowContent }) => $wasToggledButtonShowContent && 'rotate(180deg)'};
@@ -31,22 +34,24 @@ const Description = styled('p')`
   margin: 25px 0 0;
 `
 
-function TaskBody({
-  data,
-  refs,
-  isOpenedContent,
-  isDisabledButtonShowContent,
-  wasToggledButtonShowContent,
-  handleShowContent,
-  styleTaskElements,
-}: TaskBodyProps) {
-  const { refTitle, refContentBox } = refs
+interface TaskBodyProps {
+  refs: TaskElementsRefs
+}
+
+function TaskBody({ refs }: TaskBodyProps) {
+  const { refTitle } = refs
+
+  const { dataTask } = useContext(TaskItemContext)
+  const { nameTask, description } = dataTask
+
+  const { isDisabledButtonShowContent, wasToggledButtonShowContent, styleTaskElements, handleShowContent } =
+    useContext(TaskBodyContext)
 
   return (
     <>
-      <Title ref={refTitle}>{data.nameTask}</Title>
+      <Title ref={refTitle}>{nameTask}</Title>
 
-      {data.description && (
+      {description && (
         <>
           <ButtonShowContent
             $styleTaskElements={styleTaskElements} // прокидывается внутрь TaskControl
@@ -56,12 +61,8 @@ function TaskBody({
             <StyledIconArrowDown $wasToggledButtonShowContent={wasToggledButtonShowContent} />
           </ButtonShowContent>
 
-          <ContentBox
-            wasToggledButtonShowContent={wasToggledButtonShowContent}
-            isOpenedContent={isOpenedContent}
-            refContentBox={refContentBox}
-          >
-            <Description>{data.description}</Description>
+          <ContentBox refs={refs}>
+            <Description>{description}</Description>
           </ContentBox>
         </>
       )}

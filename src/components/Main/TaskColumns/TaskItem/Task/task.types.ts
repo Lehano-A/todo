@@ -1,6 +1,6 @@
 import { DraggableProvided } from '@hello-pangea/dnd'
 
-import { TaskColumnName } from '../TaskColumns/taskColumns.types'
+import { TaskColumnName } from '../../taskColumns.types'
 
 export interface TasksType {
   todo: TaskType[]

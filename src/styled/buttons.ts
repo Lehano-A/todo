@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { StyleTaskElements } from '../components/Main/Task/task.types'
+import { StyleTaskElements } from '../components/Main/TaskColumns/TaskItem/Task/task.types'
 import { simpleFocusOutlineStyle } from './css/highlighting'
 
 export const PrimaryButton = styled('button')`

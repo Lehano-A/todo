@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { ReactComponent as IconCalendar } from '../../../images/icons/calendar.svg'
 import { ReactComponent as IconClear } from '../../../images/icons/clear.svg'
-import { TaskType } from '../../Main/Task/task.types'
+import { TaskType } from '../../Main/TaskColumns/TaskItem/Task/task.types'
 
 const Title = styled('h2')`
   font-size: 1.6rem;

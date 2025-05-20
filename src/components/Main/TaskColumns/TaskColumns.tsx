@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { DONE_COLUMN_NAME, INPROCESS_COLUMN_NAME, TODO_COLUMN_NAME } from '../../../constants'
+import { TaskItemContext } from '../../../contexts/TaskItemContext'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { initialTasksThunk } from '../../../redux/actions/tasksActions'
 import { disableDrop, enableDrop } from '../../../redux/reducers/slices/dndSlice'
 import { transferTask } from '../../../redux/reducers/slices/tasksSlice'
 import { RootState } from '../../../redux/store'
 import Column from '../../../styled/column'
-import { TaskType, TasksType } from '../Task/task.types'
+import { TaskType, TasksType } from './TaskItem/Task/task.types'
 import TaskItem from './TaskItem/TaskItem'
 import { StyledTaskColumnProps, TaskColumn } from './taskColumns.types'
 
@@ -84,13 +85,18 @@ function TaskColumns() {
 
                   {allTasks[columnName].map((task: TaskType, index: number) => {
                     return (
-                      <TaskItem
+                      <TaskItemContext.Provider
+                        value={{
+                          dataTask: task,
+                          isDraggingOver: snapshot.isDraggingOver,
+                          indexCurrentTask: index,
+                          ordinalNumber: index + 1,
+                          currentColumnLocation: columnName,
+                        }}
                         key={task.id}
-                        data={task}
-                        isDraggingOver={snapshot.isDraggingOver}
-                        ordinalNumber={index}
-                        currentColumnLocation={columnName}
-                      />
+                      >
+                        <TaskItem />
+                      </TaskItemContext.Provider>
                     )
                   })}
 

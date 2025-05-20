@@ -7,13 +7,14 @@ export interface CalсHeightTask {
   styleParamsTask: StyleParamsTaskType
   setStyleParamsTask: React.Dispatch<React.SetStateAction<StyleParamsTaskType>>
 }
+
 export function calcHeightTask({ refs, styleParamsTask, setStyleParamsTask }: CalсHeightTask) {
   const { refTask, refTitle, refContentBox } = refs
 
   // ссылки на элементы
-  const task = refTask.current
-  const title = refTitle.current
-  const contentBox = refContentBox.current
+  const task = refTask?.current
+  const title = refTitle?.current
+  const contentBox = refContentBox?.current
 
   // значения styleParamsParent
   const paramsClosedTask = styleParamsTask.closed.task

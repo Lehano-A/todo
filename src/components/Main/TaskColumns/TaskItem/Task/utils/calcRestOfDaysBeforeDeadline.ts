@@ -1,9 +1,9 @@
-export type RestOfDays = number | undefined
+export type RestOfDays = number | null
 
 // рассчитать остаток дней до дедлайна выполнения задачи
 export function calcRestOfDaysBeforeDeadline(deadline: string): RestOfDays {
   if (deadline === '') {
-    return
+    return null
   }
 
   const [day, month, year] = deadline.split('.')

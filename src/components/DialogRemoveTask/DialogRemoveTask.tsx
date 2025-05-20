@@ -62,7 +62,7 @@ const ButtonCancel = styled(StyledButton)``
 
 function DialogRemoveTask({ refDialog }: DialogRemoveTaskProps & { handleRemoveTask?: () => void }) {
   const { dialogRemoveTask } = useSelector((state: RootState) => state.dialogs)
-  const { columnName, data } = dialogRemoveTask
+  const { columnName, dataTask } = dialogRemoveTask
 
   const dispatch = useDispatch()
 
@@ -76,7 +76,7 @@ function DialogRemoveTask({ refDialog }: DialogRemoveTaskProps & { handleRemoveT
 
   // удалить задачу
   function handleRemoveTask() {
-    if (columnName) dispatch(removeTask({ columnName, id: data.id }))
+    if (columnName) dispatch(removeTask({ columnName, id: dataTask.id }))
 
     handleCloseDialog()
   }
@@ -90,7 +90,7 @@ function DialogRemoveTask({ refDialog }: DialogRemoveTaskProps & { handleRemoveT
       <CommonBox>
         <BoxText>
           <ConfirmationQuestion>Вы действительно хотите эту удалить задачу?</ConfirmationQuestion>
-          <NameTask>{data.nameTask}</NameTask>
+          <NameTask>{dataTask.nameTask}</NameTask>
         </BoxText>
 
         <ButtonsBox>

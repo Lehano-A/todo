@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-import { TaskElementsRefs, TaskProps } from '../components/Main/Task/task.types'
-import { CalсHeightTask, calcHeightTask } from '../components/Main/Task/utils/calcHeightTask'
+import { TaskElementsRefs, TaskProps } from '../components/Main/TaskColumns/TaskItem/Task/task.types'
+import { CalсHeightTask, calcHeightTask } from '../components/Main/TaskColumns/TaskItem/Task/utils/calcHeightTask'
 
 interface UseCalcHeightTaskProps {
-  data: TaskProps['data']
+  dataTask: TaskProps['data']
   refs: TaskElementsRefs
   styleParamsTask: CalсHeightTask['styleParamsTask']
   setStyleParamsTask: CalсHeightTask['setStyleParamsTask']
@@ -12,16 +12,16 @@ interface UseCalcHeightTaskProps {
 }
 
 export function useCalcHeightTask({
-  data,
+  dataTask,
   refs,
   styleParamsTask,
   setStyleParamsTask,
   wasToggledButtonShowContent,
 }: UseCalcHeightTaskProps) {
-  const { refTask, refContentBox } = refs
+  const { refTask, refTitle, refContentBox } = refs
 
-  const titleClientHeight = refs.refTitle.current?.clientHeight
-  const contentBoxClientHeight = refs.refContentBox.current?.clientHeight
+  const titleClientHeight = refTitle?.current?.clientHeight
+  const contentBoxClientHeight = refContentBox?.current?.clientHeight
 
   useEffect(() => {
     // после монтирования компонента, без document.fonts.ready.then, вычисляется некорректная высота элемента h2, поэтому, чтобы вычисления происходили наверняка после установки всех стилей - используется document.fonts.ready.then
@@ -32,8 +32,8 @@ export function useCalcHeightTask({
 
   useEffect(() => {
     // расчёт высоты ContentBox
-    if (refTask.current && refContentBox.current && typeof styleParamsTask.closed.task.height === 'number') {
+    if (refTask?.current && refContentBox?.current && typeof styleParamsTask.closed.task.height === 'number') {
       calcHeightTask({ refs, styleParamsTask, setStyleParamsTask })
     }
-  }, [wasToggledButtonShowContent, data.nameTask, data.description, titleClientHeight, contentBoxClientHeight])
+  }, [wasToggledButtonShowContent, dataTask.nameTask, dataTask.description, titleClientHeight, contentBoxClientHeight])
 }

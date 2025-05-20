@@ -4,7 +4,7 @@ import uniqid from 'uniqid'
 
 import { closeDialog } from '../../redux/reducers/slices/dialogsSlice'
 import { addNewTask } from '../../redux/reducers/slices/tasksSlice'
-import { TaskType } from '../Main/Task/task.types'
+import { TaskType } from '../Main/TaskColumns/TaskItem/Task/task.types'
 import Dialog from '../common/Dialog/Dialog'
 import FormTask from '../common/FormTask/FormTask'
 

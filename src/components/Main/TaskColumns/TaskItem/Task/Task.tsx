@@ -1,12 +1,15 @@
-import React, { TransitionEvent, useMemo, useRef, useState } from 'react'
+import { DraggableProvided } from '@hello-pangea/dnd'
+import React, { TransitionEvent, useContext, useMemo, useRef, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 
-import { useCalcHeightTask } from '../../../hooks/useCalcHeightTask'
-import { simpleFocusOutlineStyle } from '../../../styled/css/highlighting'
-import { visibleTaskControlsStyle } from '../../../styled/css/visibleTaskControlsStyle'
+import { TaskBodyContext } from '../../../../../contexts/TaskBodyContext'
+import { TaskItemContext } from '../../../../../contexts/TaskItemContext'
+import { useCalcHeightTask } from '../../../../../hooks/useCalcHeightTask'
+import { simpleFocusOutlineStyle } from '../../../../../styled/css/highlighting'
+import { visibleTaskControlsStyle } from '../../../../../styled/css/visibleTaskControlsStyle'
 import Deadline from './Deadline/Deadline'
 import TaskBody from './TaskBody/TaskBody'
-import { InnerBoxTaskBodyProps, StyleParamsTaskType, TaskElementsRefs, TaskProps } from './task.types'
+import { InnerBoxTaskBodyProps, StyleParamsTaskType, TaskElementsRefs } from './task.types'
 import { calcRestOfDaysBeforeDeadline } from './utils/calcRestOfDaysBeforeDeadline'
 import { getColorsTaskElements } from './utils/getColorsTaskElements'
 
@@ -63,8 +66,10 @@ const OrdinalNumber = styled('span')`
   color: ${({ theme }) => theme.palette.grey[400]};
 `
 
-function Task({ data, index, ordinalNumber, currentColumnLocation, provided }: TaskProps & { index: any }) {
+function Task({ provided }: { provided: DraggableProvided }) {
   const theme = useTheme()
+
+  const { dataTask, ordinalNumber, currentColumnLocation } = useContext(TaskItemContext)
 
   const [wasToggledButtonShowContent, setWasToggledButtonShowContent] = useState(false) // сам факт нажатия кнопки
   const [isDisabledButtonShowContent, setIsDisabledButtonShowContent] = useState(false)
@@ -87,13 +92,13 @@ function Task({ data, index, ordinalNumber, currentColumnLocation, provided }: T
 
   const isTaskDone = currentColumnLocation === 'done' // находится ли задача в колонке 'done'
 
-  const restOfDays = useMemo(() => calcRestOfDaysBeforeDeadline(data.deadline), [data.deadline])
+  const restOfDays = useMemo(() => calcRestOfDaysBeforeDeadline(dataTask.deadline), [dataTask.deadline])
 
   const styleTaskElements = useMemo(() => getColorsTaskElements(theme, restOfDays, isTaskDone), [restOfDays])
 
   // высчитываем высоту задачи
   useCalcHeightTask({
-    data,
+    dataTask,
     refs,
     styleParamsTask,
     setStyleParamsTask,
@@ -126,42 +131,38 @@ function Task({ data, index, ordinalNumber, currentColumnLocation, provided }: T
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
       ref={provided?.innerRef}
-      $hasDeadline={Boolean(data.deadline)}
+      $hasDeadline={Boolean(dataTask.deadline)}
       $isTaskDone={isTaskDone}
     >
-      {(data.deadline || isTaskDone) && (
-        <Deadline
-          data={data}
-          restOfDays={restOfDays}
-          isTaskDone={isTaskDone}
-          currentColumnLocation={currentColumnLocation}
-          styleTaskElements={styleTaskElements}
-        />
-      )}
+      <TaskBodyContext.Provider
+        value={{
+          isOpenedContent,
+          isDisabledButtonShowContent,
+          wasToggledButtonShowContent,
+          styleTaskElements,
+          restOfDays,
+          isTaskDone,
+          handleShowContent,
+        }}
+      >
+        {(dataTask.deadline || isTaskDone) && <Deadline />}
 
-      <OuterBoxTaskBody>
-        <OrdinalNumber>{ordinalNumber}</OrdinalNumber>
+        <OuterBoxTaskBody>
+          <OrdinalNumber>{ordinalNumber}</OrdinalNumber>
 
-        <InnerBoxTaskBody
-          ref={refs.refTask}
-          $isTaskDone={isTaskDone}
-          $hasDeadline={Boolean(data.deadline)}
-          $styleParamsTask={styleParamsTask}
-          $wasToggledButtonShowContent={wasToggledButtonShowContent}
-          $styleTaskElements={styleTaskElements}
-          onTransitionEnd={handleTransitionEnd}
-        >
-          <TaskBody
-            data={data}
-            refs={refs}
-            isOpenedContent={isOpenedContent}
-            isDisabledButtonShowContent={isDisabledButtonShowContent}
-            wasToggledButtonShowContent={wasToggledButtonShowContent}
-            handleShowContent={handleShowContent}
-            styleTaskElements={styleTaskElements}
-          />
-        </InnerBoxTaskBody>
-      </OuterBoxTaskBody>
+          <InnerBoxTaskBody
+            ref={refs.refTask}
+            $isTaskDone={isTaskDone}
+            $hasDeadline={Boolean(dataTask.deadline)}
+            $styleParamsTask={styleParamsTask}
+            $wasToggledButtonShowContent={wasToggledButtonShowContent}
+            $styleTaskElements={styleTaskElements}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            <TaskBody refs={refs} />
+          </InnerBoxTaskBody>
+        </OuterBoxTaskBody>
+      </TaskBodyContext.Provider>
     </CommonWrapper>
   )
 }
