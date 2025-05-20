@@ -1,28 +1,28 @@
 {
   "files": {
-    "main.css": "/toodoo/static/css/main.ce8fc707.css",
-    "main.js": "/toodoo/static/js/main.8b470f13.js",
-    "static/media/Rubik-Medium.woff": "/toodoo/static/media/Rubik-Medium.2d7c3aac52dbcf1e9a76.woff",
-    "static/media/Rubik-Regular.woff": "/toodoo/static/media/Rubik-Regular.9b504b121d513b85cf70.woff",
-    "static/media/Rubik-Light.woff": "/toodoo/static/media/Rubik-Light.b98975383295673ea225.woff",
-    "static/media/Rubik-Medium.woff2": "/toodoo/static/media/Rubik-Medium.b87db4c34be5f3bcbae4.woff2",
-    "static/media/Rubik-Regular.woff2": "/toodoo/static/media/Rubik-Regular.7faeaac164d429f053a1.woff2",
-    "static/media/Rubik-Light.woff2": "/toodoo/static/media/Rubik-Light.b1f0f1d816758ea3bc4a.woff2",
-    "static/media/Slackey-Regular.woff": "/toodoo/static/media/Slackey-Regular.00d2cfe0a348899e48af.woff",
-    "static/media/Slackey-Regular.woff2": "/toodoo/static/media/Slackey-Regular.51e5fa6c7c32b562bdb4.woff2",
-    "static/media/calendar.svg": "/toodoo/static/media/calendar.67fac591758dd04e9b33a70b06009022.svg",
-    "static/media/clear.svg": "/toodoo/static/media/clear.c05e5cc1a7c897f24e8d49d962e3fb47.svg",
-    "index.html": "/toodoo/index.html",
-    "static/media/edit.svg": "/toodoo/static/media/edit.f0c4f67769b2dfb9652041500a1e54c8.svg",
-    "static/media/delete.svg": "/toodoo/static/media/delete.e21cbc6753a20770bfaadd7d0bd540b4.svg",
-    "static/media/close.svg": "/toodoo/static/media/close.de9d896183fc8f01a8937e7f228aa5f8.svg",
-    "static/media/add.svg": "/toodoo/static/media/add.85a1b719f97012a88ac46317914e01e8.svg",
-    "static/media/arrow-down.svg": "/toodoo/static/media/arrow-down.0cd5216bcaa38fedee18d4c75afae151.svg",
-    "main.ce8fc707.css.map": "/toodoo/static/css/main.ce8fc707.css.map",
-    "main.8b470f13.js.map": "/toodoo/static/js/main.8b470f13.js.map"
+    "main.css": "/static/css/main.fb24ef50.css",
+    "main.js": "/static/js/main.7289334b.js",
+    "static/media/Rubik-Medium.woff": "/static/media/Rubik-Medium.2d7c3aac52dbcf1e9a76.woff",
+    "static/media/Rubik-Regular.woff": "/static/media/Rubik-Regular.9b504b121d513b85cf70.woff",
+    "static/media/Rubik-Light.woff": "/static/media/Rubik-Light.b98975383295673ea225.woff",
+    "static/media/Rubik-Medium.woff2": "/static/media/Rubik-Medium.b87db4c34be5f3bcbae4.woff2",
+    "static/media/Rubik-Regular.woff2": "/static/media/Rubik-Regular.7faeaac164d429f053a1.woff2",
+    "static/media/Rubik-Light.woff2": "/static/media/Rubik-Light.b1f0f1d816758ea3bc4a.woff2",
+    "static/media/Slackey-Regular.woff": "/static/media/Slackey-Regular.00d2cfe0a348899e48af.woff",
+    "static/media/Slackey-Regular.woff2": "/static/media/Slackey-Regular.51e5fa6c7c32b562bdb4.woff2",
+    "static/media/calendar.svg": "/static/media/calendar.67fac591758dd04e9b33a70b06009022.svg",
+    "static/media/clear.svg": "/static/media/clear.c05e5cc1a7c897f24e8d49d962e3fb47.svg",
+    "index.html": "/index.html",
+    "static/media/edit.svg": "/static/media/edit.f0c4f67769b2dfb9652041500a1e54c8.svg",
+    "static/media/delete.svg": "/static/media/delete.e21cbc6753a20770bfaadd7d0bd540b4.svg",
+    "static/media/close.svg": "/static/media/close.de9d896183fc8f01a8937e7f228aa5f8.svg",
+    "static/media/add.svg": "/static/media/add.85a1b719f97012a88ac46317914e01e8.svg",
+    "static/media/arrow-down.svg": "/static/media/arrow-down.0cd5216bcaa38fedee18d4c75afae151.svg",
+    "main.fb24ef50.css.map": "/static/css/main.fb24ef50.css.map",
+    "main.7289334b.js.map": "/static/js/main.7289334b.js.map"
   },
   "entrypoints": [
-    "static/css/main.ce8fc707.css",
-    "static/js/main.8b470f13.js"
+    "static/css/main.fb24ef50.css",
+    "static/js/main.7289334b.js"
   ]
 }
